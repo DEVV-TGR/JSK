@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Os tokens da marca entram aqui na Fase 2 (sistema de desenho).
+   Por agora só o mínimo para o esqueleto compilar e ser legível.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  --font-titulo: var(--fonte-titulo), ui-sans-serif, system-ui, sans-serif;
+  --font-corpo: var(--fonte-corpo), ui-sans-serif, system-ui, sans-serif;
+
+  --color-amarelo: #fdd000;
+  --color-tinta: #0b0b0b;
+  --color-papel: #ffffff;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-papel);
+  color: var(--color-tinta);
+  font-family: var(--font-corpo);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-titulo);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background-color: var(--color-amarelo);
+  color: var(--color-tinta);
+}
+
+/* O anel de foco do tema antigo era `outline-style: dotted; outline-width: thin`
+   — praticamente invisível. Este vê-se. */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
