@@ -1,50 +1,320 @@
 @import "tailwindcss";
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Os tokens da marca entram aqui na Fase 2 (sistema de desenho).
-   Por agora só o mínimo para o esqueleto compilar e ser legível.
-   ───────────────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+   O sistema de desenho da JSK.
+   
+   Tudo o que é cor, tipo, ritmo, raio, sombra ou tempo sai daqui. Se um valor
+   aparece à mão dentro de um componente, é porque falta um token ou porque
+   alguém teve pressa.
+
+   A marca é a mesma do site antigo — amarelo e preto, Work Sans nos títulos e
+   Roboto no corpo. O que muda é a disciplina com que se usa.
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 @theme {
+  /* ── Tipos ──────────────────────────────────────────────────────────────
+     Servidos do nosso domínio pelo `next/font` (app/layout.tsx). O site antigo
+     ia buscá-los ao fonts.googleapis.com a cada visita.                     */
   --font-titulo: var(--fonte-titulo), ui-sans-serif, system-ui, sans-serif;
   --font-corpo: var(--fonte-corpo), ui-sans-serif, system-ui, sans-serif;
 
+  /* ── Cor ────────────────────────────────────────────────────────────────
+
+     Uma medida manda em toda a paleta: o #FDD000 tem luminância relativa 0,66.
+     É um amarelo claro. Daí saem duas consequências que não são negociáveis:
+
+       preto sobre amarelo    13,3:1   ✅  é assim que se faz um botão
+       branco sobre amarelo    1,48:1  ❌  nunca
+       #F3F3F3 sobre amarelo   1,33:1  ❌  é o que o site antigo faz hoje
+       amarelo sobre branco    1,48:1  ❌  nunca como texto
+       amarelo sobre #141414  12,5:1   ✅  amarelo como texto, só sobre escuro
+
+     Regra: **o amarelo é superfície e acento, nunca tinta sobre claro.**
+
+     Onde é preciso amarelo que se lê sobre papel — um link, um número, o filete
+     de um olho — existe o `ocre`, que é o mesmo amarelo levado até onde passa
+     (5,1:1 sobre branco). Sem ele, alguém acabaria por pôr amarelo sobre branco
+     porque "é a cor da marca", e ninguém conseguiria ler.
+
+     Os rácios estão verificados em testes/contraste.test.ts, incluindo os que
+     TÊM de reprovar — para que ninguém os reintroduza por distracção.        */
+
   --color-amarelo: #fdd000;
-  --color-tinta: #0b0b0b;
+  --color-amarelo-claro: #ffe45c; /* hover sobre superfície amarela */
+  --color-amarelo-veu: #fef9e1; /* creme; era o --ast-global-color-4 */
+  --color-amarelo-fundo: #f9f0c8; /* tinta suave; era o --ast-global-color-6 */
+  --color-ocre: #8a6900; /* o amarelo que se lê sobre papel — 5,1:1 */
+
+  --color-tinta: #0b0b0b; /* preto de leitura, não #000 puro */
+  --color-tinta-suave: #5a5a5a; /* texto secundário — 6,9:1 sobre papel */
+  --color-carvao: #141414; /* superfície escura: bandas, rodapé */
+
   --color-papel: #ffffff;
+  --color-papel-fundo: #f6f6f4; /* secção alternada */
+  --color-linha: #e5e5e2; /* separador decorativo — pode ser discreto */
+  --color-linha-forte: #8f8f8a; /* contorno de campo e de botão — 3,2:1,
+                                   que é o mínimo da WCAG 1.4.11 para o
+                                   limite de um elemento interactivo */
+
+  --color-perigo: #c4231a; /* erro de formulário — 5,8:1.
+                              Não se usa o amarelo: aqui o amarelo é a cor
+                              de acção, e um campo em erro não é uma acção */
+
+  /* ⚠️ FIXO. A tinta que assenta em cima do amarelo. Se alguém a mudar para
+     branco, o teste de contraste fica vermelho — de propósito. */
+  --color-amarelo-tinta: var(--color-tinta);
+
+  /* ── Escala tipográfica ─────────────────────────────────────────────────
+
+     O site antigo tinha seis degraus (64/48/32/24/16/14) e três larguras de
+     ecrã com valores escritos à mão em cada uma. São quatro degraus em
+     `clamp()`, sem uma única media query, com razão de ~1,4 entre eles.
+
+     Os antigos H5 e H6 não eram títulos: eram um olho por cima do H1 e a
+     numeração dos passos. Isso é o `.olho`, mais abaixo, e não um nível de
+     cabeçalho — usar um H6 como decoração parte a hierarquia da página para
+     quem a lê com um leitor de ecrã.                                         */
+
+  --text-alfa: clamp(2.5rem, 6.5vw, 4.5rem); /* H1 de herói */
+  --text-alfa--line-height: 1.05;
+  --text-alfa--letter-spacing: -0.02em;
+
+  --text-beta: clamp(1.875rem, 3.6vw, 3rem); /* H2 de secção */
+  --text-beta--line-height: 1.15;
+  --text-beta--letter-spacing: -0.015em;
+
+  --text-gama: clamp(1.375rem, 2.2vw, 2rem); /* H3 */
+  --text-gama--line-height: 1.25;
+  --text-gama--letter-spacing: -0.01em;
+
+  --text-delta: 1.25rem; /* H4 de cartão */
+  --text-delta--line-height: 1.35;
+
+  --text-corpo: 1.0625rem;
+  --text-corpo--line-height: 1.65;
+
+  --text-nota: 0.9375rem;
+  --text-nota--line-height: 1.6;
+
+  /* ── Ritmo ──────────────────────────────────────────────────────────────
+     O espaço entre secções é o que mais separa um site respirado de um
+     template. Estes valores são generosos de propósito.                     */
+
+  --spacing-seccao: clamp(4.5rem, 9vw, 8rem);
+  --spacing-bloco: clamp(2rem, 4vw, 3.5rem);
+
+  /* No namespace --container-*, para que gerem `max-w-envolvente` e
+     `max-w-medida` como utilitários a sério. */
+  --container-envolvente: 75rem; /* 1200px — o mesmo do site antigo */
+  --container-medida: 65ch; /* medida máxima de texto corrido */
+
+  /* ── Raio ───────────────────────────────────────────────────────────────
+     Concêntricos: quando um elemento se aninha noutro, o raio de dentro é o
+     de fora menos o espaçamento entre eles. Duas curvas paralelas com o mesmo
+     raio nunca ficam paralelas — ficam a apertar num sítio e a abrir noutro. */
+
+  --radius-botao: 0.5rem;
+  --radius-cartao: 0.75rem;
+  --radius-painel: 1.25rem;
+
+  /* ── Sombra ─────────────────────────────────────────────────────────────
+     Três degraus, todos com uma sombra de contacto curta por baixo de uma
+     ambiente longa — é assim que a luz cai sobre uma coisa pousada.
+
+     Fora daqui fica a `0px 104px 104px -40px rgba(0,0,0,.16)` do cartão de
+     formulário do site antigo: 104px de desfoque com 40px de contracção não
+     descreve luz nenhuma, descreve um slider arrastado até ao fim.           */
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06), 0 2px 8px rgb(0 0 0 / 0.04);
+  --shadow-2: 0 2px 4px rgb(0 0 0 / 0.06), 0 12px 28px -8px rgb(0 0 0 / 0.1);
+  --shadow-3: 0 4px 8px rgb(0 0 0 / 0.05), 0 32px 64px -24px rgb(0 0 0 / 0.18);
+
+  /* ── Tempo ──────────────────────────────────────────────────────────────
+     Curvas com massa. Nada de `linear` nem de `ease-in-out`: arrancam
+     depressa e aterram devagar, que é como as coisas param no mundo.        */
+
+  --ease-saida: cubic-bezier(0.22, 1, 0.36, 1); /* o cavalo de batalha */
+  --ease-painel: cubic-bezier(0.32, 0.72, 0, 1); /* folhas e gavetas */
+
+  --tempo-toque: 160ms; /* resposta a um clique */
+  --tempo-superficie: 220ms; /* um cartão a levantar */
+  --tempo-painel: 320ms; /* um painel a entrar */
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
+/* ═══════════════════════════════════════════════════════════════════════════
+   Base
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* Um alvo de âncora não pode ficar por baixo do cabeçalho fixo. */
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background-color: var(--color-papel);
+    color: var(--color-tinta);
+    font-family: var(--font-corpo);
+    font-size: var(--text-corpo);
+    line-height: var(--text-corpo--line-height);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-titulo);
+    font-weight: 600;
+    text-wrap: balance;
+    /* ⚠️ Sem `text-transform: capitalize`. O tema antigo tinha-o global, e é
+       ele que escreve "Sobre a Jsk" no título da página sobre nós e o "E"
+       maiúsculo em "Segurança, Construção E Impacto". Os títulos escrevem-se
+       como se escrevem em português. */
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* O site antigo tinha `outline-style: dotted; outline-width: thin` — o
+     tracejado fino do Astra, que praticamente não se vê. Este vê-se, e o ocre
+     lê-se sobre papel e sobre amarelo. */
+  :focus-visible {
+    outline: 2px solid var(--color-ocre);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-amarelo);
+    color: var(--color-amarelo-tinta);
+  }
+
+  /* Os números dos contadores mudam a cada quadro. Sem largura tabular, a
+     linha inteira treme enquanto conta. */
+  [data-numerico] {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
-body {
-  background: var(--color-papel);
-  color: var(--color-tinta);
-  font-family: var(--font-corpo);
+/* ═══════════════════════════════════════════════════════════════════════════
+   Componentes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  .envolvente {
+    max-width: var(--container-envolvente);
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  /* O olho — o rótulo pequeno que precede um título de secção.
+     Substitui os H6 decorativos do site antigo. */
+  .olho {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-titulo);
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ocre);
+  }
+
+  .olho::before {
+    content: "";
+    width: 2rem;
+    height: 2px;
+    background-color: var(--color-amarelo);
+  }
+
+  /* Superfície escura com o amarelo a servir de tinta. */
+  .bloco-tinta {
+    background-color: var(--color-carvao);
+    color: var(--color-papel);
+  }
 }
 
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-titulo);
-  font-weight: 600;
-  text-wrap: balance;
+/* ═══════════════════════════════════════════════════════════════════════════
+   Movimento
+
+   Estas regras vivem fora de `@layer` de propósito: as declarações fora de uma
+   camada ganham sempre às de dentro, e uma `transition` que quer ser a última
+   palavra tem de estar aqui. Por isso mesmo declara **todas** as propriedades
+   que anima — juntar-lhe um `transition-colors` do Tailwind ao lado não a
+   completa, substitui-a.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.premivel {
+  transition:
+    transform var(--tempo-toque) var(--ease-saida),
+    background-color var(--tempo-toque) var(--ease-saida),
+    border-color var(--tempo-toque) var(--ease-saida),
+    color var(--tempo-toque) var(--ease-saida),
+    box-shadow var(--tempo-superficie) var(--ease-saida);
 }
 
-p {
-  text-wrap: pretty;
+.premivel:active {
+  transform: scale(0.97);
 }
 
-::selection {
-  background-color: var(--color-amarelo);
-  color: var(--color-tinta);
+/* ⚠️ O hover tem de ficar aqui dentro. Num telemóvel, um toque dispara
+   `:hover` e o estado fica preso até se tocar noutro sítio — o botão fica
+   levantado depois de o dedo sair. */
+@media (hover: hover) and (pointer: fine) {
+  .premivel:hover {
+    transform: translateY(-1px);
+  }
 }
 
-/* O anel de foco do tema antigo era `outline-style: dotted; outline-width: thin`
-   — praticamente invisível. Este vê-se. */
-:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
+/* Revelação à entrada no ecrã, sem uma linha de JavaScript.
+
+   Duas decisões que valem tempo poupado:
+
+   - O conteúdo é **visível por omissão** e só anima onde há suporte. Um browser
+     sem `animation-timeline` mostra a página; não fica em branco à espera de um
+     observador que nunca dispara.
+   - O intervalo fecha em `entry`, nunca em `cover`. Com `cover`, o último bloco
+     antes do rodapé nunca chega ao fim do seu próprio percurso e fica preso a
+     meia opacidade para sempre. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .revela {
+      animation: revelar linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+
+@keyframes revelar {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* O scroll suave é dos que mais enjoam quem pediu menos movimento, e não é
+     apanhado pelas regras acima. */
+  html {
+    scroll-behavior: auto;
+  }
 }
