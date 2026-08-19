@@ -43,8 +43,6 @@ export function Contador({ valor, rotulo }: Props) {
     const caixa = elemento.getBoundingClientRect();
     if (caixa.top < window.innerHeight && caixa.bottom > 0) return;
 
-    setMostrado(0);
-
     let quadro = 0;
     const duracao = valor >= 1000 ? 1600 : 1100;
 
@@ -52,6 +50,14 @@ export function Contador({ valor, rotulo }: Props) {
       ([entrada]) => {
         if (!entrada.isIntersecting) return;
         observador.disconnect();
+
+        // ⚠️ O recuo a zero acontece AQUI, no quadro em que a animação começa
+        // — não no `useEffect`. Se estivesse lá em cima, bastava o observador
+        // não chegar a disparar (um browser que o não suporte, uma captura de
+        // ecrã automatizada, um separador que nunca chega a ser mostrado) para
+        // o número ficar em `0` para sempre. O modo de falha passa a ser "não
+        // anima", em vez de "mostra zero projectos concluídos".
+        setMostrado(0);
 
         const inicio = performance.now();
         const passo = (agora: number) => {

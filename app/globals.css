@@ -233,6 +233,56 @@
     background-color: var(--color-amarelo);
   }
 
+  /* O painel de navegação em ecrã estreito.
+
+     Está aqui e não em classes utilitárias porque o `@starting-style` e as
+     transições de `display` e `overlay` com `allow-discrete` não têm variante
+     que as escreva bem — e sem elas o painel aparece de repente à entrada e
+     desaparece de repente à saída, que é o oposto do que um painel deve fazer.
+
+     A ordem importa: o `@starting-style` tem de vir DEPOIS da regra normal,
+     senão não ganha. */
+  .painel-movel {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--tempo-painel) var(--ease-painel),
+      translate var(--tempo-painel) var(--ease-painel),
+      overlay var(--tempo-painel) var(--ease-painel) allow-discrete,
+      display var(--tempo-painel) var(--ease-painel) allow-discrete;
+  }
+
+  .painel-movel:not([open]) {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+
+  @starting-style {
+    .painel-movel[open] {
+      opacity: 0;
+      translate: 0 1rem;
+    }
+  }
+
+  .painel-movel::backdrop {
+    background-color: rgb(11 11 11 / 0.7);
+    opacity: 1;
+    transition:
+      opacity var(--tempo-painel) var(--ease-painel),
+      overlay var(--tempo-painel) var(--ease-painel) allow-discrete,
+      display var(--tempo-painel) var(--ease-painel) allow-discrete;
+  }
+
+  .painel-movel:not([open])::backdrop {
+    opacity: 0;
+  }
+
+  @starting-style {
+    .painel-movel[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
   /* Superfície escura com o amarelo a servir de tinta. */
   .bloco-tinta {
     background-color: var(--color-carvao);

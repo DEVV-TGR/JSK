@@ -32,7 +32,10 @@ export function TituloSeccao({
   return (
     <div
       className={cn(
-        "revela flex flex-col gap-5",
+        "revela flex w-full flex-col gap-5",
+        // `items-center` tem o mesmo efeito que `items-start`: encolhe os
+        // filhos ao conteúdo. Aqui é o que se quer para o olho, por isso o
+        // parágrafo leva `mx-auto` em vez de o contentor mandar em todos.
         centrado && "items-center text-center",
         className,
       )}

@@ -1,28 +1,23 @@
-import { ROTAS_PUBLICAS, site } from "@/lib/site";
+import { BandaNumeros } from "@/components/seccoes/BandaNumeros";
+import { Diferenciais } from "@/components/seccoes/Diferenciais";
+import { GrelhaSectores } from "@/components/seccoes/GrelhaSectores";
+import { Heroi } from "@/components/seccoes/Heroi";
+import { Introducao } from "@/components/seccoes/Introducao";
+import { O_QUE_NOS_TORNA_UNICOS } from "@/lib/conteudo/diferenciadores";
+import { HEROI_INICIO, TITULO_DIFERENCIAIS } from "@/lib/conteudo/paginas";
 
-/**
- * Página de espera da Fase 1.
- *
- * O esqueleto tem de compilar e responder antes de haver desenho, e é isso que
- * esta página prova. É substituída na Fase 6 pela homepage a sério.
- */
 export default function Inicio() {
   return (
-    <main className="mx-auto max-w-3xl px-6 py-24">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em]">
-        {site.tagline}
-      </p>
-      <h1 className="mt-4 text-5xl">{site.nome}</h1>
-      <p className="mt-6 text-lg">{site.descricao}</p>
-
-      <h2 className="mt-16 text-2xl">Rotas previstas</h2>
-      <ul className="mt-4 space-y-1">
-        {ROTAS_PUBLICAS.map((rota) => (
-          <li key={rota}>
-            <code>{rota}</code>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <>
+      <Heroi {...HEROI_INICIO} variante="inicio" />
+      <Introducao />
+      <GrelhaSectores />
+      <Diferenciais
+        olho="Porquê a JSK"
+        titulo={TITULO_DIFERENCIAIS}
+        itens={O_QUE_NOS_TORNA_UNICOS}
+      />
+      <BandaNumeros />
+    </>
   );
 }
