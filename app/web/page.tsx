@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { ServicoLd } from "@/components/DadosEstruturados";
 import { Heroi } from "@/components/seccoes/Heroi";
 import { ParceriaWeb, ServicosWeb } from "@/components/seccoes/ServicosWeb";
 import { HEROIS_SECTOR, PARCERIA_WEB } from "@/lib/conteudo/paginas";
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default function Web() {
   return (
     <>
+      <ServicoLd id="web" />
       <Heroi
         {...HEROIS_SECTOR.web}
         botoes={[

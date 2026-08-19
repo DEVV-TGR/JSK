@@ -195,6 +195,35 @@ async function converter(asset, origem) {
   return (await stat(destino)).size;
 }
 
+/**
+ * Os ícones do site, gerados do logótipo.
+ *
+ * Vão para `app/`, onde o Next os apanha por convenção e gera as tags de
+ * `<link rel="icon">` sozinho. O fundo é o amarelo da marca em vez de
+ * transparente: um logótipo com fundo transparente numa barra de separadores
+ * escura fica um borrão preto.
+ */
+async function gerarIcones() {
+  const logotipo = join(
+    ORIGINAIS,
+    "2025/08/cropped-cropped-Sinal-JSK-com-Numero-de-Telefone-e1754857762844-1-1.png",
+  );
+
+  for (const [destino, lado] of [
+    ["app/icon.png", 512],
+    ["app/apple-icon.png", 180],
+  ]) {
+    await sharp(logotipo)
+      .resize(lado, lado, {
+        fit: "contain",
+        background: { r: 253, g: 208, b: 0, alpha: 1 },
+      })
+      .png()
+      .toFile(join(RAIZ, destino));
+    console.log(`  ${destino.padEnd(34)} ${String(lado).padStart(8)} px`);
+  }
+}
+
 async function principal() {
   console.log(`A importar ${ASSETS.length} assets de ${BASE}\n`);
 
@@ -235,6 +264,8 @@ async function principal() {
     `\n  originais  ${KB(bytesOrigem)}\n  public/    ${KB(bytesDestino)}  ` +
       `(−${Math.round((1 - bytesDestino / bytesOrigem) * 100)}%)`,
   );
+
+  await gerarIcones();
 
   // O poster do vídeo evita que o bloco apareça preto até o primeiro quadro
   // chegar. Precisa do ffmpeg, que não é dependência do projecto.

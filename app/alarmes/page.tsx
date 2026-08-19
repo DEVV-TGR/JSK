@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { BlocoServicos } from "@/components/seccoes/BlocoServicos";
 import { Galeria } from "@/components/seccoes/Galeria";
+import { ServicoLd } from "@/components/DadosEstruturados";
 import { Heroi } from "@/components/seccoes/Heroi";
 import { Processo } from "@/components/seccoes/Processo";
 import { GALERIA_ALARMES } from "@/lib/conteudo/galerias";
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
 export default function Alarmes() {
   return (
     <>
+      <ServicoLd id="alarmes" />
       <Heroi {...HEROIS_SECTOR.alarmes} />
       <BlocoServicos bloco={SERVICOS_ALARMES} olho="JSK Alarmes" />
       <Galeria galeria={GALERIA_ALARMES} olho="Trabalho feito" proporcao="3 / 4" />

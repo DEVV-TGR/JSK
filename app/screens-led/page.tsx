@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Aplicacoes, Comparacao } from "@/components/seccoes/Comparacao";
+import { ServicoLd } from "@/components/DadosEstruturados";
 import { Heroi } from "@/components/seccoes/Heroi";
 import { VideoScreens } from "@/components/seccoes/VideoScreens";
 import { HEROIS_SECTOR } from "@/lib/conteudo/paginas";
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export default function ScreensLed() {
   return (
     <>
+      <ServicoLd id="screens" />
       <Heroi {...HEROIS_SECTOR.screens} />
       <VideoScreens />
       <Comparacao />

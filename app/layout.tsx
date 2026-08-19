@@ -3,6 +3,7 @@ import { Roboto, Work_Sans } from "next/font/google";
 
 import { BandaOrcamento } from "@/components/BandaOrcamento";
 import { Cabecalho } from "@/components/Cabecalho";
+import { EmpresaLd } from "@/components/DadosEstruturados";
 import { Rodape } from "@/components/Rodape";
 import { site } from "@/lib/site";
 
@@ -62,6 +63,7 @@ export default function RaizLayout({
           Saltar para o conteúdo
         </a>
 
+        <EmpresaLd />
         <Cabecalho />
 
         <main id="conteudo" className="flex-1">

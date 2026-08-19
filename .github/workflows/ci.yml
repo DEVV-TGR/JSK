@@ -91,6 +91,10 @@ jobs:
           verificar /politica-de-privacidade/  200
           verificar /sitemap.xml               200
           verificar /robots.txt                200
+          verificar /icon.png                  200
+          verificar /apple-icon.png            200
+          verificar /opengraph-image/          200
+          verificar /alarmes/opengraph-image/  200
           # A página de estilo só existe em desenvolvimento.
           verificar /estilo/                   404
           # A barra final não é descuido: com `trailingSlash`, um caminho sem
@@ -101,6 +105,36 @@ jobs:
           # O WordPress fazia 301 de /screens para /screens-led/; há links de
           # fora a apontar para lá.
           verificar /screens                   308
+
+      # O formulário nunca pode fingir que enviou. Enquanto CONTACTO_PROVEDOR
+      # estiver vazio, a resposta certa é 503 com os contactos directos — e é
+      # isso que se verifica aqui, para que ninguém troque o 503 por um 200 a
+      # tentar "arranjar" o formulário.
+      - name: O formulário não finge que envia
+        run: |
+          set -euo pipefail
+          corpo='{"nome":"Maria Silva","email":"maria@exemplo.pt","telefone":"912 345 678","servicos":["JSK Alarmes"],"mensagem":"Queria um orcamento para alarme numa moradia.","consentimento":true,"empresa":""}'
+
+          codigo=$(curl -s -o /tmp/resposta.json -w '%{http_code}' \
+            -X POST http://localhost:3000/api/contacto/ \
+            -H 'content-type: application/json' -d "$corpo")
+
+          if [ "$codigo" != "503" ]; then
+            echo "✗ /api/contacto/ devolveu ${codigo}, esperava 503"
+            cat /tmp/resposta.json
+            exit 1
+          fi
+          grep -q '"erro":"nao-configurado"' /tmp/resposta.json
+          grep -q '"telefone"' /tmp/resposta.json
+          echo "✓ 503 com os contactos directos"
+
+          # A armadilha responde 200 sem entregar nada.
+          armadilha=$(curl -s -o /dev/null -w '%{http_code}' \
+            -X POST http://localhost:3000/api/contacto/ \
+            -H 'content-type: application/json' \
+            -d '{"nome":"a","email":"a@a.pt","telefone":"912345678","servicos":[],"mensagem":"xxxxxxxxxxxx","consentimento":true,"empresa":"robo"}')
+          [ "$armadilha" = "200" ] || { echo "✗ armadilha devolveu ${armadilha}"; exit 1; }
+          echo "✓ a armadilha responde 200"
 
       # Os cabeçalhos de segurança são configuração, e configuração parte-se sem
       # ninguém dar por isso. Aqui, parte-se com o CI vermelho.

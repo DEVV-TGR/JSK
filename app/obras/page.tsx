@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { BlocoServicos } from "@/components/seccoes/BlocoServicos";
 import { Galeria } from "@/components/seccoes/Galeria";
+import { ServicoLd } from "@/components/DadosEstruturados";
 import { Heroi } from "@/components/seccoes/Heroi";
 import { Processo } from "@/components/seccoes/Processo";
 import { GALERIA_OBRAS } from "@/lib/conteudo/galerias";
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
 export default function Obras() {
   return (
     <>
+      <ServicoLd id="obras" />
       <Heroi {...HEROIS_SECTOR.obras} />
       <BlocoServicos bloco={SERVICOS_OBRAS} olho="JSK Obras" />
       {/* As fotografias de obras são de paisagem; forçá-las à proporção de
