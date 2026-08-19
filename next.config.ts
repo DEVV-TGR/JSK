@@ -83,12 +83,6 @@ const cabecalhosDeSeguranca = [
 ];
 
 const nextConfig: NextConfig = {
-  /* Fixa a raiz do workspace neste projecto. A pasta-mãe tem outros repos e um
-     lockfile perdido lá acima faz o Next inferir a raiz errada. */
-  turbopack: {
-    root: __dirname,
-  },
-
   /**
    * O site em WordPress serve tudo com barra final e faz 301 de `/alarmes` para
    * `/alarmes/`. É a versão com barra que está indexada e nos links de fora.
