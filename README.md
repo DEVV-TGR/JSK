@@ -78,7 +78,10 @@ projecto na Vercel.
 
 ## Antes de publicar
 
-- [ ] `NEXT_PUBLIC_SITE_URL` a apontar para o domínio final
+- [ ] `NEXT_PUBLIC_SITE_URL` a apontar para o domínio final — **ou fora de vez.**
+      Uma variável definida mas vazia não é o mesmo que não a ter; o código
+      trata os dois casos, mas deixá-la vazia nas definições da Vercel é
+      convidar a próxima confusão
 - [ ] entrega de email ligada e testada com um envio a sério
 - [ ] NIF e denominação social preenchidos em `lib/site.ts`
 - [ ] telefone confirmado (hoje há dois em circulação — ver decisões pendentes)
