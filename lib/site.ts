@@ -9,18 +9,65 @@
  * possível — o número que se lê e o número que se marca são literalmente a
  * mesma variável.
  */
+/**
+ * O endereço público do site, a partir do ambiente.
+ *
+ * ⚠️ **Não usar `??` com uma variável de ambiente.** O `??` só recua em `null`
+ * e `undefined`; uma variável definida mas vazia é `""`, que passa incólume.
+ * Foi exactamente isso que partiu o primeiro deploy na Vercel: o
+ * `NEXT_PUBLIC_SITE_URL` existia lá vazio, o `??` deixou passar a string vazia,
+ * e o `new URL("")` do `metadataBase` rebentou a build inteira com
+ * `ERR_INVALID_URL` e `input: ''`. Em desenvolvimento a variável nem existe,
+ * por isso o recuo funcionava e o defeito não se via.
+ *
+ * A ordem de preferência:
+ *
+ * 1. `NEXT_PUBLIC_SITE_URL`, quando tem mesmo alguma coisa lá dentro.
+ * 2. O domínio que a Vercel atribui ao deployment. É o que faz uma
+ *    pré-visualização gerar URLs canónicos que apontam para ela própria em vez
+ *    de para o site a sério — senão é a pré-visualização a competir com o site
+ *    nos resultados de pesquisa.
+ * 3. `https://jsk.pt`.
+ */
+export function resolverUrl(): string {
+  const candidatos = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.NEXT_PUBLIC_VERCEL_URL,
+    process.env.VERCEL_URL,
+  ];
+
+  for (const bruto of candidatos) {
+    const valor = bruto?.trim();
+    if (!valor) continue;
+
+    // A Vercel dá o anfitrião sem esquema.
+    const comEsquema = /^https?:\/\//.test(valor) ? valor : `https://${valor}`;
+    const semBarra = comEsquema.replace(/\/+$/, "");
+
+    try {
+      new URL(semBarra);
+      return semBarra;
+    } catch {
+      // Um valor inválido é um erro de configuração, não uma coisa para
+      // ignorar em silêncio: o site ficaria com canónicos e cartões sociais a
+      // apontar para o sítio errado sem ninguém dar por isso.
+      throw new Error(
+        `O endereço do site está inválido: "${valor}". ` +
+          "Verifica a NEXT_PUBLIC_SITE_URL nas variáveis de ambiente.",
+      );
+    }
+  }
+
+  return "https://jsk.pt";
+}
+
 export const site = {
   nome: "JSK",
   tagline: "A Sua Melhor Solução",
   dominio: "jsk.pt",
 
-  /**
-   * Em produção fica `https://jsk.pt`. A variável existe para que uma
-   * pré-visualização na Vercel não gere URLs canónicos a apontar para o site
-   * a sério — se o fizesse, seria a pré-visualização a competir com o site nos
-   * resultados de pesquisa.
-   */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://jsk.pt",
+  /** Ver `resolverUrl()`, acima. Nunca tem barra final. */
+  url: resolverUrl(),
 
   lang: "pt-PT",
   locale: "pt_PT",
