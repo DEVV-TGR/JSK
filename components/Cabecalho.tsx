@@ -31,6 +31,13 @@ export function Cabecalho() {
   const dialogo = useRef<HTMLDialogElement>(null);
   const caminho = usePathname();
 
+  /* Seguir um link fecha o painel. Isto está no clique e não num efeito sobre
+     o caminho: um `useEffect` que chama `setState` a cada navegação faz o React
+     renderizar duas vezes por página e é o que a regra
+     `react-hooks/set-state-in-effect` existe para apanhar. O evento que fecha o
+     menu é o clique — é aí que se trata dele. */
+  const fechar = () => setAberto(false);
+
   /* O estado "já se fez scroll" vem de um observador sobre um elemento de 1px
      no topo da página, não de um listener de `scroll`. Um listener dispara
      dezenas de vezes por segundo e obriga o browser a recalcular a página em
@@ -46,12 +53,6 @@ export function Cabecalho() {
     observador.observe(alvo);
     return () => observador.disconnect();
   }, []);
-
-  /* Navegar fecha o menu. Sem isto, seguir um link deixava o painel aberto por
-     cima da página nova. */
-  useEffect(() => {
-    setAberto(false);
-  }, [caminho]);
 
   useEffect(() => {
     const elemento = dialogo.current;
@@ -117,11 +118,7 @@ export function Cabecalho() {
         </div>
       </header>
 
-      <MenuMovel
-        ref={dialogo}
-        caminho={caminho}
-        aoFechar={() => setAberto(false)}
-      />
+      <MenuMovel ref={dialogo} caminho={caminho} aoFechar={fechar} />
     </>
   );
 }
@@ -192,6 +189,7 @@ function MenuMovel({
             <li key={item.rota} className="border-b border-papel/12">
               <Link
                 href={item.rota}
+                onClick={aoFechar}
                 aria-current={caminho === item.rota ? "page" : undefined}
                 className={cn(
                   "block py-5 font-titulo text-gama font-semibold",
@@ -204,7 +202,7 @@ function MenuMovel({
           ))}
         </ul>
 
-        <div className="mt-10 flex flex-col gap-3">
+        <div className="mt-10 flex flex-col gap-3" onClick={aoFechar}>
           <Botao href="/contactos/" icone="setaDireita">
             Peça um Orçamento Gratuito
           </Botao>

@@ -80,17 +80,27 @@ jobs:
             echo "✓ ${caminho} → ${obtido}"
           }
 
-          verificar /                        200
-          verificar /sitemap.xml             200
-          verificar /robots.txt              200
+          verificar /                          200
+          verificar /alarmes/                  200
+          verificar /obras/                    200
+          verificar /screens-led/              200
+          verificar /web/                      200
+          verificar /sobre-nos/                200
+          verificar /contactos/                200
+          verificar /termos-e-condicoes/       200
+          verificar /politica-de-privacidade/  200
+          verificar /sitemap.xml               200
+          verificar /robots.txt                200
+          # A página de estilo só existe em desenvolvimento.
+          verificar /estilo/                   404
           # A barra final não é descuido: com `trailingSlash`, um caminho sem
           # barra devolve 308 para a versão com barra antes de chegar ao 404.
           # Sem ela, este teste passava a verificar o redireccionamento em vez
           # da página de erro.
-          verificar /uma-rota-que-nao-existe/ 404
+          verificar /uma-rota-que-nao-existe/  404
           # O WordPress fazia 301 de /screens para /screens-led/; há links de
           # fora a apontar para lá.
-          verificar /screens                  308
+          verificar /screens                   308
 
       # Os cabeçalhos de segurança são configuração, e configuração parte-se sem
       # ninguém dar por isso. Aqui, parte-se com o CI vermelho.
