@@ -1,0 +1,347 @@
+/* ═════════════════════════════════════════════════════════════════════════
+   A camada de movimento.
+
+   Regra única deste ficheiro: **tudo o que está aqui é enfeite por cima de
+   uma página que já funciona sem ele.** O estado por omissão de cada
+   elemento é o estado final — visível, legível, com o número certo. As
+   animações só entram dentro do `@supports`, e só quando o visitante não
+   pediu menos movimento.
+
+   Escrito ao contrário — esconder primeiro, revelar por animação — um
+   browser sem `animation-timeline` serviria uma página em branco. Já
+   aconteceu a sites a sério.
+
+   O porquê de cada decisão está em `docs/movimento.md`.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+@property --contagem {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+
+/* ── Contadores ────────────────────────────────────────────────────────────
+   Contagem em CSS puro. O site antigo carregava jQuery, jquery-numerator e
+   waypoints — três ficheiros — para fazer isto.
+
+   Por omissão `--contagem` já é o valor final, para que sem suporte se leia
+   o número e não um zero. */
+.contador {
+  --contagem: var(--alvo);
+  counter-reset: contagem var(--contagem);
+  font-variant-numeric: tabular-nums;
+}
+
+.contador::after {
+  content: counter(contagem);
+}
+
+/* Todo o traço do desenho da casa nasce fechado — ou seja, desenhado. Só
+   dentro do `@supports` é que passa a abrir-se com o scroll. Os caminhos
+   levam `pathLength="1"` no SVG, o que normaliza qualquer comprimento a 1 e
+   dispensa medir cada um em JavaScript. */
+.casa-traco,
+.casa-perimetro {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* A linha de progresso do cabeçalho. Sem linha temporal fica a zero, que é
+   invisível — é ornamento, e ornamento que falha tem de desaparecer, não
+   ficar a meio. */
+.progresso {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* ── Entrada ─────────────────────────────────────────────────────────
+       O escalonamento não é um `animation-delay`: com uma linha temporal de
+       scroll o atraso não faz sentido nenhum, porque o tempo é a posição.
+       Desloca-se o intervalo de cada elemento em vez do seu início. */
+    .entra {
+      animation: entra linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry calc(55% + var(--i, 0) * 9%);
+    }
+
+    /* ── Título que se monta ─────────────────────────────────────────────
+       Linha a linha. Cada `<span>` leva o seu `--i`. */
+    .monta > * {
+      animation: monta linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry calc(40% + var(--i, 0) * 14%);
+    }
+
+    /* ── Limpeza ─────────────────────────────────────────────────────────
+       Uma mudança de estado, feita com `clip-path`. Nunca com `width`. */
+    .revela {
+      animation: revela linear both;
+      animation-timeline: view();
+      animation-range: entry 15% entry 85%;
+    }
+
+    /* ── Viagem lateral ──────────────────────────────────────────────────
+       A secção alta declara a linha temporal, a faixa lá dentro anda.
+
+       O intervalo é `contain` e não `cover`: `contain` é exactamente o tempo
+       em que a secção ocupa o ecrã inteiro, ou seja o tempo em que a faixa
+       está fixa. Fecha enquanto ainda se vê. Um `cover 100%` na última
+       secção da página nunca chega ao fim, porque não há mais scroll — e o
+       bloco fica preso a meio para sempre. */
+    .pista {
+      view-timeline: --pista block;
+    }
+
+    .pista-faixa {
+      animation: viaja linear both;
+      animation-timeline: --pista;
+      animation-range: contain 0% contain 100%;
+    }
+
+    /* ── Contagem ────────────────────────────────────────────────────────
+       Fecha em `entry`, para que o número esteja completo bem antes de a
+       secção sair do ecrã. */
+    .contador {
+      --contagem: 0;
+      animation: conta linear both;
+      animation-timeline: view();
+      animation-range: entry 25% entry 90%;
+    }
+
+    /* ── Contagem dentro da faixa ────────────────────────────────────────
+       Um número que viaja lateralmente não pode contar por `view()`: a linha
+       temporal de vista mede a posição vertical do elemento, e aqui o que
+       muda é a horizontal. O elemento está parado no eixo que `view()` sabe
+       medir, por isso a contagem dispararia toda ao mesmo tempo.
+
+       A contagem passa a pender da linha temporal da própria faixa, com o
+       intervalo deslocado por `--i`: cada número conta quando a faixa o traz
+       ao centro do ecrã. */
+    .contador-pista {
+      animation-timeline: --pista;
+      animation-range: contain calc(var(--i, 0) * 29%) contain
+        calc(var(--i, 0) * 29% + 13%);
+    }
+
+    /* O painel também acende à chegada, para que quem lê saiba onde olhar. */
+    .pista-painel {
+      /* Também com curva: um painel que acende em linear pisca, um que acende
+         com travagem chega. */
+      animation: acorda cubic-bezier(0.33, 0, 0.15, 1) both;
+      animation-timeline: --pista;
+      animation-range: contain calc(var(--i, 0) * 29%) contain
+        calc(var(--i, 0) * 29% + 9%);
+    }
+
+    /* ── A casa que se arma ──────────────────────────────────────────────
+       O gesto assinatura. O traço desenha-se, os sensores acendem em
+       sequência, o perímetro fecha.
+
+       Os três correm sobre a mesma linha temporal — a da cena — para que a
+       ordem seja garantida pela posição no scroll e não por temporizadores
+       que podem dessincronizar. */
+    .casa {
+      view-timeline: --casa block;
+    }
+
+    .casa-traco {
+      animation: traca linear both;
+      animation-timeline: --casa;
+      animation-range: contain 0% contain 35%;
+    }
+
+    .casa-sensor {
+      animation: acende linear both;
+      animation-timeline: --casa;
+      animation-range: contain calc(35% + var(--i, 0) * 9%) contain
+        calc(50% + var(--i, 0) * 9%);
+    }
+
+    .casa-perimetro {
+      animation: fecha linear both;
+      animation-timeline: --casa;
+      animation-range: contain 74% contain 92%;
+    }
+
+    /* A etiqueta de cada sensor acende com o sensor, não antes nem depois. */
+    .casa-etiqueta {
+      animation: acorda linear both;
+      animation-timeline: --casa;
+      animation-range: contain calc(35% + var(--i, 0) * 9%) contain
+        calc(50% + var(--i, 0) * 9%);
+    }
+
+    /* O estado final: só depois de o perímetro fechar. */
+    .casa-estado {
+      animation: entra linear both;
+      animation-timeline: --casa;
+      animation-range: contain 88% contain 98%;
+    }
+
+    /* ── A linha de progresso ────────────────────────────────────────────
+       Conduzida pelo scroll da página inteira, e não pela posição de um
+       elemento — é a única coisa no site que mede a página toda. */
+    .progresso {
+      animation: progride linear both;
+      animation-timeline: scroll(root block);
+    }
+
+    /* ── O herói a afastar-se ────────────────────────────────────────────
+       O título recua enquanto sai, em vez de deslizar rígido. `exit` fecha
+       quando o elemento acaba mesmo de sair, o que para o primeiro ecrã
+       acontece sempre. */
+    .afasta {
+      animation: afasta linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 90%;
+    }
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Os fotogramas.
+
+   Só `transform`, `opacity` e `clip-path` — as três que o compositor sabe
+   fazer sem voltar a calcular a página. Nunca `width`, `height`, `top` nem
+   `left`, e nunca `transition: all`.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+@keyframes entra {
+  from {
+    opacity: 0;
+    transform: translateY(1.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes monta {
+  from {
+    opacity: 0;
+    transform: translateY(0.6em) rotate(-1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes revela {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/**
+ * A faixa avança aos degraus, não de forma contínua.
+ *
+ * Primeira versão: velocidade constante. Um número entrava, atravessava e saía
+ * sem nunca parar, e não havia tempo de o ler.
+ *
+ * Segunda versão: quatro paragens com repouso, mas em `linear` — cada avanço
+ * arrancava à velocidade máxima e parava a seco. Lia-se, mas aos solavancos.
+ *
+ * Esta: as mesmas quatro paragens, com **aceleração e travagem em cada
+ * avanço**. O `animation-timing-function` numa chave governa o troço que
+ * *começa* nela, por isso vai nas chaves de 13%, 42% e 71% — as que abrem os
+ * três movimentos. Os troços de repouso ficam em linear, que para uma coisa
+ * parada é indiferente.
+ *
+ * A curva é uma sinusoide (`0.45, 0, 0.55, 1`): simétrica, sem ressalto, e
+ * sem o arranque seco de um `ease-in-out` normal. Num movimento conduzido pelo
+ * scroll o ressalto é sempre mau — a pessoa está a empurrar a animação com a
+ * mão, e uma curva que volta para trás lê-se como o site a resistir.
+ *
+ * `--percurso` é a largura da faixa menos a do ecrã, posta pelo componente.
+ * Sem ela a faixa não anda, em vez de andar de mais.
+ */
+@keyframes viaja {
+  0%,
+  13% {
+    transform: translate3d(0, 0, 0);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  29%,
+  42% {
+    transform: translate3d(calc(var(--percurso, 0px) * -0.3333), 0, 0);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  58%,
+  71% {
+    transform: translate3d(calc(var(--percurso, 0px) * -0.6667), 0, 0);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  87%,
+  100% {
+    transform: translate3d(calc(var(--percurso, 0px) * -1), 0, 0);
+  }
+}
+
+@keyframes conta {
+  to {
+    --contagem: var(--alvo);
+  }
+}
+
+@keyframes traca {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes acende {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fecha {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0.3;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes progride {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes afasta {
+  to {
+    opacity: 0;
+    transform: translateY(-14%) scale(0.965);
+  }
+}
+
+@keyframes acorda {
+  from {
+    opacity: 0.25;
+  }
+  to {
+    opacity: 1;
+  }
+}

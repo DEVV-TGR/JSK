@@ -1,27 +1,110 @@
 @import "tailwindcss";
+@import "./movimento.css";
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Os tokens da marca entram aqui na Fase 2 (sistema de desenho).
-   Por agora só o mínimo para o esqueleto compilar e ser legível.
-   ───────────────────────────────────────────────────────────────────────── */
+/* ═════════════════════════════════════════════════════════════════════════
+   O sistema de desenho da JSK.
+
+   O registo é sinalética industrial, e não é uma escolha de gosto: o
+   logótipo da empresa é literalmente um sinal de trânsito — o ficheiro
+   chama-se `Sinal-JSK-com-Numero-de-Telefone`. Amarelo de sinalização sobre
+   asfalto, arestas duras, tipografia grande e números à vista.
+
+   Ver `docs/brief-experiencia.md` para a gramática da página e
+   `docs/movimento.md` para o que se move e porquê.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* O `hover:` do Tailwind v4 já vive dentro de `@media (hover: hover)`, mas
+   falta-lhe o `pointer: fine`. Sem ele, um telemóvel com rato ligado por USB
+   e um portátil com ecrã táctil caem no mesmo balde. Redefinir a variante
+   aqui apanha *todos* os `hover:` do projecto de uma vez — mais seguro do que
+   confiar que ninguém escreve um `hover:` sem se lembrar da regra. */
+@custom-variant hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
 
 @theme {
+  /* ── Tipografia ──────────────────────────────────────────────────────────
+     A Archivo substitui a Work Sans do site antigo. A Work Sans veio do
+     template Astra "Roofing", não de um manual de marca — e é suave demais
+     para carregar um título do tamanho de uma chapa. A Archivo é uma
+     grotesca de haste larga, que é o que a sinalética pede.
+
+     A Roboto fica. É a que o cliente já usa, lê-se bem em corpo pequeno e é
+     a família de largo uso mais próxima do lettering de sinalização. */
   --font-titulo: var(--fonte-titulo), ui-sans-serif, system-ui, sans-serif;
   --font-corpo: var(--fonte-corpo), ui-sans-serif, system-ui, sans-serif;
 
+  /* ── Cor ─────────────────────────────────────────────────────────────────
+     Seis valores. O amarelo é o do cliente, ao hexadecimal.
+
+     Os pares de texto sobre fundo estão todos acima de 4.5:1, medidos e não
+     estimados:
+       amarelo  sobre asfalto  13.3:1
+       papel    sobre asfalto  19.7:1
+       asfalto  sobre amarelo  13.3:1   ← o botão. O site antigo punha
+                                          #F3F3F3 sobre este amarelo, que é
+                                          1.5:1 e é o defeito #32.
+       grafite  sobre asfalto   5.7:1
+       chumbo   sobre papel     7.2:1 */
+  --color-asfalto: #0b0b0b;
+  --color-betao: #171717;
   --color-amarelo: #fdd000;
-  --color-tinta: #0b0b0b;
   --color-papel: #ffffff;
+  --color-cal: #f4f4f2;
+  --color-grafite: #8c8c8c;
+  --color-chumbo: #57575a;
+
+  /* ── Escala tipográfica ──────────────────────────────────────────────────
+     Fluida entre 380px e 1400px de viewport. O site antigo tinha três
+     degraus fixos (desktop / 921 / 544) e um salto de 64px para 32px no H1,
+     que é onde a hierarquia se desfazia no telemóvel. */
+  --text-chapa: clamp(2.5rem, 7vw, 5.75rem);
+  --text-chapa--line-height: 0.92;
+  --text-chapa--letter-spacing: -0.03em;
+
+  --text-cena: clamp(2.25rem, 6vw, 4.25rem);
+  --text-cena--line-height: 1;
+  --text-cena--letter-spacing: -0.02em;
+
+  --text-bloco: clamp(1.5rem, 3vw, 2.25rem);
+  --text-bloco--line-height: 1.1;
+  --text-bloco--letter-spacing: -0.01em;
+
+  --text-guia: clamp(1.0625rem, 1.4vw, 1.25rem);
+  --text-guia--line-height: 1.6;
+
+  --text-etiqueta: 0.75rem;
+  --text-etiqueta--line-height: 1.2;
+  --text-etiqueta--letter-spacing: 0.14em;
+
+  /* ── Ritmo vertical ──────────────────────────────────────────────────────
+     Um só passo, usado em toda a parte. Densidade sem ritmo é ruído. */
+  --espaco-cena: clamp(5rem, 12vw, 10rem);
+  --espaco-bloco: clamp(2.5rem, 5vw, 4.5rem);
 }
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Base
+   ═════════════════════════════════════════════════════════════════════════ */
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* O `scroll-behavior: smooth` fica de fora de propósito: com âncoras e
+     `position: sticky` na mesma página, o salto suave chega ao destino
+     depois de a animação de scroll já ter corrido, e aterra no sítio
+     errado. */
 }
 
 body {
-  background: var(--color-papel);
-  color: var(--color-tinta);
+  background: var(--color-asfalto);
+  color: var(--color-papel);
   font-family: var(--font-corpo);
+  /* A página tem cenas de terreno claro e escuro em alternância. O corpo é
+     escuro para que o over-scroll no topo e no fundo não mostre branco. */
 }
 
 h1,
@@ -29,8 +112,11 @@ h2,
 h3,
 h4 {
   font-family: var(--font-titulo);
-  font-weight: 600;
+  font-weight: 700;
   text-wrap: balance;
+  /* Sem `text-transform: capitalize`. O tema antigo tinha-o global e era
+     por isso que `Sobre a JSK` aparecia escrito `Sobre a Jsk` — o CSS
+     reescrevia o nome da empresa. */
 }
 
 p {
@@ -39,12 +125,61 @@ p {
 
 ::selection {
   background-color: var(--color-amarelo);
-  color: var(--color-tinta);
+  color: var(--color-asfalto);
 }
 
-/* O anel de foco do tema antigo era `outline-style: dotted; outline-width: thin`
-   — praticamente invisível. Este vê-se. */
+/* O anel de foco do tema antigo era `outline-style: dotted; outline-width:
+   thin` — praticamente invisível. Este vê-se, e vê-se nos dois terrenos. */
 :focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
+  outline: 3px solid var(--color-amarelo);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* Nos terrenos amarelos o anel amarelo desaparece. Aí é preto. */
+.terreno-amarelo :focus-visible {
+  outline-color: var(--color-asfalto);
+}
+
+@layer components {
+  /* ── A chapa ─────────────────────────────────────────────────────────────
+     O motivo que se repete em todo o site: uma placa de sinalização.
+     Amarelo, aresta dura, e o filete interior preto que os sinais têm.
+
+     Não leva `hover:` aqui dentro. No Tailwind v4 uma variante escrita
+     dentro de `@layer components` compila para nada — o hover vive nas
+     classes utilitárias do componente. */
+  .chapa {
+    background-color: var(--color-amarelo);
+    color: var(--color-asfalto);
+    box-shadow: inset 0 0 0 3px var(--color-asfalto);
+    border-radius: 2px;
+  }
+
+  /* ── A pilha fixa ────────────────────────────────────────────────────────
+     Os quatro sectores ocupam o mesmo sítio no ecrã e substituem-se à medida
+     que se desce. Cada um encosta um pouco mais abaixo do que o anterior, o
+     que deixa a aresta dos que já passaram à vista — dá a ler a pilha como
+     uma pilha, e não como um cartão a piscar.
+
+     `position: sticky` puro. Não depende de `animation-timeline`, não depende
+     de JavaScript, e funciona em tudo o que suporta `sticky` — que é tudo.
+     A altura do cabeçalho está no cálculo porque o cabeçalho é ele próprio
+     `sticky` e taparia o topo de cada cartão. */
+  .pilha-item {
+    position: sticky;
+    top: calc(4.5rem + var(--i, 0) * 3.25rem);
+  }
+
+  /* ── A banda de perigo ───────────────────────────────────────────────────
+     O corte entre cenas. Três pixels de diagonal amarela e preta, que é o
+     que separa um terreno do seguinte sem haver interpolação nenhuma. */
+  .banda-perigo {
+    height: 0.75rem;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--color-amarelo) 0 0.75rem,
+      var(--color-asfalto) 0.75rem 1.5rem
+    );
+  }
 }
