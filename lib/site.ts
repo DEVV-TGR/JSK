@@ -1,4 +1,20 @@
 /**
+ * O endereço público, com a variável de ambiente a ganhar quando existe.
+ *
+ * O `??` sozinho não chega: uma Environment Variable declarada na Vercel mas
+ * deixada em branco chega aqui como `""`, que é diferente de `undefined` e
+ * portanto passa pelo `??`. O build morria em `new URL("")` no `layout.tsx`
+ * com `ERR_INVALID_URL`, na recolha de dados do `/_not-found`. Por isso o
+ * teste é ao valor depois de aparado, não à sua existência.
+ */
+function urlDoAmbiente(): string {
+  const declarado = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (declarado) return declarado.replace(/\/+$/, "");
+
+  return "https://jsk.pt";
+}
+
+/**
  * A fonte única sobre a JSK.
  *
  * Tudo o que seja o nome, o contacto ou a morada da empresa sai daqui e mais
@@ -20,7 +36,7 @@ export const site = {
    * a sério — se o fizesse, seria a pré-visualização a competir com o site nos
    * resultados de pesquisa.
    */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://jsk.pt",
+  url: urlDoAmbiente(),
 
   lang: "pt-PT",
   locale: "pt_PT",
