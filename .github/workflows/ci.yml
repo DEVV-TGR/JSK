@@ -81,6 +81,7 @@ jobs:
           }
 
           verificar /                        200
+          verificar /alarmes/                200
           verificar /sitemap.xml             200
           verificar /robots.txt              200
           # A barra final não é descuido: com `trailingSlash`, um caminho sem

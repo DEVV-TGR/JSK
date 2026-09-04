@@ -75,6 +75,42 @@ export const BANDA_ORCAMENTO = {
   chamada: "Ligue-nos Agora",
 } as const;
 
+/**
+ * Os quatro passos, iguais em `/alarmes/` e `/obras/`.
+ *
+ * O inventário diz que os dois blocos são **byte a byte idênticos** no site
+ * actual — o mesmo texto colado duas vezes no Elementor, livre para divergir a
+ * partir do dia em que alguém corrigisse um e não o outro. É exactamente o caso
+ * que o `CLAUDE.md` dá para a copy viver em módulos partilhados.
+ *
+ * A numeração não está aqui: sai do `index` onde a lista é percorrida. É o que
+ * torna impossível o defeito #7, em que os serviços de `/obras/` estão
+ * numerados `01., 01., 02.`.
+ */
+export const PROCESSO = {
+  titulo: "O Nosso Processo",
+  passos: [
+    {
+      titulo: "Consulta",
+      texto:
+        "Trabalhamos consigo para perceber as suas necessidades e avaliar a melhor solução.",
+    },
+    {
+      titulo: "Orçamento",
+      texto: "Apresentamos um orçamento claro e ajustado ao seu projeto.",
+    },
+    {
+      titulo: "Instalação",
+      texto: "Executamos o serviço com rapidez, segurança e qualidade.",
+    },
+    {
+      titulo: "Inspeção",
+      texto:
+        "Verificamos todos os detalhes para garantir o funcionamento ideal.",
+    },
+  ],
+} as const;
+
 export const RODAPE = {
   /* Verbatim do rodapé actual. */
   sobre:

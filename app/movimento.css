@@ -180,6 +180,86 @@
       animation-range: contain 88% contain 98%;
     }
 
+    /* ── O painel que arma ───────────────────────────────────────────────
+       O pico da `/alarmes/`. Mesma mecânica da casa — uma linha temporal só,
+       tudo lá dentro pendurado nela — e forma diferente: quatro zonas de um
+       painel de alarme que armam uma a uma, e o contorno amarelo a fechar por
+       cima delas no fim.
+
+       O que a casa é para a homepage, isto é para esta página. Repetir o
+       mesmo desenho nas duas seria mostrar o gesto duas vezes seguidas a quem
+       vem de lá. */
+    .painel {
+      view-timeline: --painel block;
+    }
+
+    /* Abaixo de `lg` a cena **não** é fixa: quatro zonas com as suas listas não
+       cabem no ecrã de um telemóvel, e uma cena fixa que não cabe corta o que
+       lá está sem deixar rasto. Aí cada zona entra pela sua própria posição,
+       como qualquer outra lista do site. */
+    @media (max-width: 63.999rem) {
+      .painel-zona {
+        animation: entra linear both;
+        animation-timeline: view();
+        animation-range: entry 5% entry calc(45% + var(--i, 0) * 8%);
+      }
+    }
+
+    @media (min-width: 64rem) {
+      /* Quatro zonas a 15% cada acabam aos 55%, o que deixa o contorno a fechar
+         entre os 66% e os 88% e ainda sobra folga antes de a cena sair. Fechar
+         em `contain` e não em `cover` é o que garante que o traço completa
+         enquanto ainda se vê. */
+      .painel-zona {
+        animation: acorda cubic-bezier(0.33, 0, 0.15, 1) both;
+        animation-timeline: --painel;
+        animation-range: contain calc(var(--i, 0) * 15%) contain
+          calc(var(--i, 0) * 15% + 10%);
+      }
+
+      .painel-led {
+        animation: acende linear both;
+        animation-timeline: --painel;
+        animation-range: contain calc(var(--i, 0) * 15%) contain
+          calc(var(--i, 0) * 15% + 8%);
+      }
+
+      /* A lista de cada zona limpa-se da esquerda para a direita, logo a seguir
+         ao LED dela acender. `clip-path`, nunca `width`. */
+      .painel-lista {
+        animation: revela linear both;
+        animation-timeline: --painel;
+        animation-range: contain calc(4% + var(--i, 0) * 15%) contain
+          calc(var(--i, 0) * 15% + 14%);
+      }
+
+      /* O contorno fecha a seguir à última zona, lado a lado, no sentido dos
+         ponteiros do relógio. São quatro filetes em `scaleX`/`scaleY` e não um
+         traço SVG: o `pathLength` normalizado que a casa usa dava a volta ao
+         rectângulo à mesma velocidade em todos os lados, e num painel muito
+         mais largo do que alto isso lê-se como o traço a hesitar nos lados
+         curtos. Assim cada lado leva o tempo que o seu comprimento pede.
+
+         O `--de` e o `--ate` de cada filete vão no `style`, porque o que muda
+         de um para o outro é só o intervalo. */
+      .painel-contorno-h,
+      .painel-contorno-v {
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --painel;
+        animation-range: contain calc(var(--de, 0) * 1%) contain
+          calc(var(--ate, 100) * 1%);
+      }
+
+      .painel-contorno-h {
+        animation-name: fecha-horizontal;
+      }
+
+      .painel-contorno-v {
+        animation-name: fecha-vertical;
+      }
+    }
+
     /* ── A linha de progresso ────────────────────────────────────────────
        Conduzida pelo scroll da página inteira, e não pela posição de um
        elemento — é a única coisa no site que mede a página toda. */
@@ -318,6 +398,27 @@
   to {
     stroke-dashoffset: 0;
     opacity: 1;
+  }
+}
+
+/* Os quatro filetes do contorno do painel. A origem de cada um vai na classe
+   utilitária do componente, e é ela que faz o traço dar a volta em vez de
+   quatro riscos crescerem do meio para fora. */
+@keyframes fecha-horizontal {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes fecha-vertical {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
   }
 }
 
