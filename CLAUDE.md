@@ -121,6 +121,18 @@ Estão aqui porque custaram tempo lá e o padrão repete-se.
   `@media (hover: hover) and (pointer: fine)`.
 - **Playwright só em Chromium deixa passar o que só parte no Safari do iPhone.**
   A configuração corre também em `iPhone 14`, e é de propósito.
+- **`??` com uma variável de ambiente está errado.** O `??` só recua em `null` e
+  `undefined`; uma variável **definida mas vazia** é `""` e passa incólume. Foi
+  isto que partiu o primeiro deploy: `process.env.NEXT_PUBLIC_SITE_URL ??
+  "https://jsk.pt"` deixou passar a string vazia até ao `new URL("")` do
+  `metadataBase`, e a build caiu com `ERR_INVALID_URL` e `input: ''`. Em
+  desenvolvimento a variável nem existe, por isso o recuo funcionava e nada se
+  via. Usar `||`, ou um guarda que faça `trim()` — ver `resolverUrl()` em
+  `lib/site.ts` e os testes em `testes/site.test.ts`.
+- **O que só se vê no deploy custa dez vezes mais.** A regra prática: qualquer
+  coisa que dependa do ambiente tem de ter um teste que corra com o ambiente
+  vazio. `NEXT_PUBLIC_SITE_URL="" npm run build` é o comando que reproduz a
+  Vercel neste portátil.
 
 ## Decisões de arquitectura, e porque estão assim
 

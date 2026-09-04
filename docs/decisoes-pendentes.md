@@ -43,6 +43,12 @@ a **XquisiteVision** (`xquisitevision.pt`), que também assina o desenho do site
 Parece uma mudança de parceiro aplicada ao `/web/` (última alteração em Agosto
 de 2026) e nunca propagada à homepage nem ao rodapé — mas parecer não chega.
 
+**Mais uma peça, encontrada ao montar a página:** a fotografia de topo do
+`/web/` — o ficheiro `image.png`, de 2,1 MB — mostra dois monitores com a
+palavra **XquisiteVision** escrita no ecrã. Ou seja, a página que credita a
+DevPlus no texto tem a marca antiga impressa na imagem. Seja qual for a
+decisão, esta fotografia tem de ser substituída ou editada.
+
 ---
 
 ## 3. NIF e denominação social — em falta
