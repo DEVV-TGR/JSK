@@ -2,14 +2,19 @@ import { Botao } from "@/components/ui/Botao";
 import { Icone } from "@/components/ui/Icone";
 import { Medida, Seccao } from "@/components/ui/Seccao";
 import { BANDA_ORCAMENTO, ORCAMENTO } from "@/lib/conteudo/comum";
-import { site, telefoneHref } from "@/lib/site";
+import { telefoneHref } from "@/lib/site";
 
 /**
  * O fecho, nas nove páginas.
  *
  * É a chapa amarela — o motivo que marcou cada cena — a ocupar o ecrã inteiro.
  * A gramática pede que o fim resolva em vez de se esbater: a última coisa que
- * se vê não é o rodapé, é o pedido, em cheio, com o número ao lado.
+ * se vê não é o rodapé, é o pedido, em cheio.
+ *
+ * Sem o número escrito por baixo dos botões: o `Ligue-nos Agora` já marca o
+ * `tel:`, e o número por extenso continua no cabeçalho, no rodapé e na
+ * apresentação. Repetido uma quarta vez ao fundo de cada uma das nove páginas
+ * era ruído, não insistência.
  */
 export function BandaOrcamento() {
   return (
@@ -38,10 +43,6 @@ export function BandaOrcamento() {
               </Botao>
             </div>
           </div>
-
-          <p className="text-etiqueta mt-12 font-bold tracking-[0.14em] uppercase">
-            {site.telefone}
-          </p>
         </Medida>
       </Seccao>
     </>
