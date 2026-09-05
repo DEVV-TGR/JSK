@@ -54,6 +54,39 @@
   transform-origin: 0 50%;
 }
 
+/* O filete das linhas da folha de verificações. Ao contrário da linha de
+   progresso, este nasce **inteiro**: é a régua que fecha cada linha do bloco,
+   e uma folha cujas réguas desaparecessem sem suporte deixava de ter forma. */
+.filete {
+  transform: scaleX(1);
+  transform-origin: 0 50%;
+}
+
+/* O rasto nasce inteiro, como o traço da casa: sem linha temporal vê-se a
+   área varrida toda, que é o estado final. */
+.camara-rasto {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* A câmara nasce virada para o fim do varrimento — uma câmara instalada e a
+   apontar, e não um desenho a meio. O eixo é o ponto onde o braço encosta à
+   chapa do suporte, e as coordenadas são as do `viewBox`, o que obriga a
+   declarar `transform-box: view-box`: por omissão um `transform-origin` em
+   px dentro de um SVG conta a partir da caixa do elemento, não do desenho.
+
+   **O sinal é ao contrário do que parece.** Em SVG o `y` cresce para baixo,
+   por isso um ângulo positivo roda no sentido do relógio — e um corpo
+   pendurado por baixo do eixo, rodado no sentido do relógio, vai para a
+   **esquerda**. O varrimento é da esquerda para a direita, logo acaba no
+   `-22deg`. À primeira estava ao contrário: a luz andava para um lado
+   enquanto o rasto crescia para o outro. */
+.camara-braco {
+  transform-box: view-box;
+  transform-origin: 300px 54px;
+  transform: rotate(-22deg);
+}
+
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     /* ── Entrada ─────────────────────────────────────────────────────────
@@ -72,6 +105,59 @@
       animation: monta linear both;
       animation-timeline: view();
       animation-range: entry 0% entry calc(40% + var(--i, 0) * 14%);
+    }
+
+    /* ── A câmara que varre ──────────────────────────────────────────────
+       O varrimento é uma rotação só, do braço inteiro, à volta do eixo do
+       suporte. O corpo, a lente e o cone vão atrás porque estão todos dentro
+       do mesmo `<g>` — como numa câmara a sério, onde não há uma peça a rodar
+       por sua conta.
+
+       O intervalo atravessa duas fases de propósito. Só com `contain` o
+       varrimento tinha uns 300px de scroll para acontecer e passava
+       despercebido; começar a meio da entrada dá-lhe quase mil, e acabar já
+       lá dentro põe o fim do varrimento a coincidir com as provas a passar
+       ao lado. */
+    .camara {
+      view-timeline: --camara block;
+    }
+
+    /* O atalho `animation` vem sempre **antes** do `animation-timeline` e do
+       `animation-range`, e as duas regras repetem o intervalo em vez de o
+       partilharem num selector comum. Não é repetição por desleixo: o atalho
+       reinicia as duas propriedades para o valor inicial, por isso escrito
+       depois delas apaga-as em silêncio e a animação cai na linha temporal do
+       documento — corre uma vez ao carregar a página e fica no fim. Foi
+       exactamente o que aconteceu aqui à primeira.
+
+       Mesmo intervalo e mesma curva nas duas: são animações diferentes a
+       contar o mesmo tempo, e é isso que mantém a ponta do rasto debaixo do
+       cone em qualquer ponto do scroll. */
+    .camara-braco {
+      animation: varre linear both;
+      animation-timeline: --camara;
+      animation-range: entry 45% contain 90%;
+    }
+
+    .camara-rasto {
+      animation: rasto linear both;
+      animation-timeline: --camara;
+      animation-range: entry 45% contain 90%;
+    }
+
+    /* ── O filete que risca a linha ──────────────────────────────────────
+       Seis linhas, seis filetes, um gesto só: cada um começa a crescer no
+       mesmo ponto e acaba mais tarde do que o anterior, o que faz o conjunto
+       ler-se como um instrumento a descer a folha em vez de seis entradas
+       independentes.
+
+       O passo é maior do que o do `.entra` (12% contra 9%) porque estas
+       linhas são altas: com o passo pequeno, a primeira e a última fechavam
+       quase ao mesmo tempo e a série deixava de se ver como série. */
+    .filete {
+      animation: risca linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry calc(50% + var(--i, 0) * 12%);
     }
 
     /* ── Limpeza ─────────────────────────────────────────────────────────
@@ -316,6 +402,45 @@
   }
   to {
     clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes risca {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* O chão que a luz já varreu, da esquerda para a direita. */
+@keyframes rasto {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* O varrimento, também da esquerda para a direita — e é por isso que vai do
+   ângulo positivo para o negativo, não ao contrário. Ver a nota do sinal na
+   regra da `.camara-braco` lá em cima.
+
+   Os `-22deg` de chegada são os mesmos que estão declarados como estado de
+   repouso: se um deles mudar, muda o outro, senão a câmara salta no fotograma
+   em que a animação acaba.
+
+   E os 22° não são um número escolhido a olho — são o ângulo a que o cone
+   assenta exactamente nos 120 e nos 480 do `viewBox`, que são as duas pontas
+   do rasto. Mexer num obriga a refazer a conta do outro. */
+@keyframes varre {
+  from {
+    transform: rotate(22deg);
+  }
+  to {
+    transform: rotate(-22deg);
   }
 }
 
