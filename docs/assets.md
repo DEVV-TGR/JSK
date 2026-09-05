@@ -32,6 +32,21 @@ Cada ficheiro é redimensionado a **1200px de largura máxima** e gravado em JPE
 `mozjpeg` a **qualidade 78**. As seis fotografias da galeria de `/alarmes/`
 passaram de 936 KB para 640 KB, sem diferença visível.
 
+### A excepção: o fundo do herói
+
+O 1200px é a medida dos cartões da galeria, que ocupam um terço da `Medida`. O
+fundo do herói da homepage é ecrã inteiro, e por isso leva os **1536px nativos**
+do original — que é tudo o que existe: não há versão maior no servidor do
+cliente, e num monitor grande a imagem vai ler-se suave. Fica dito.
+
+Sai em **WebP a 82** e não em JPEG. O original é uma imagem gerada por IA —
+superfícies lisas e um degradê de céu, que é onde o JPEG cria bandas visíveis e
+o WebP não. Deu **1996 KB → 55 KB**.
+
+O formato de saída vem da extensão do destino no script (`.webp` → WebP, o resto
+JPEG) e a largura de um `largura` opcional por asset. Não há uma segunda opção
+para manter em sincronia com o nome do ficheiro.
+
 ## Os nomes mudam, e é de propósito
 
 Os nomes do WordPress trazem o sufixo do editor de imagem

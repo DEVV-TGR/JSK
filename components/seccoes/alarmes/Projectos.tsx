@@ -8,8 +8,8 @@ import { PROJECTOS } from "@/lib/conteudo/alarmes";
  * A galeria, em folha de contacto.
  *
  * Seis instalações a sério, que é o melhor argumento que esta página tem — e a
- * única fotografia verdadeira de todo o projecto. O herói dispensa imagem
- * precisamente para que a primeira que apareça seja uma destas.
+ * única fotografia verdadeira de todo o projecto. A do herói da homepage é uma
+ * imagem gerada, do cliente; estas foram tiradas em obra.
  *
  * Cada cartão é uma chapa: tira preta no topo com o número, a fotografia, e as
  * legendas do cliente por baixo. É a mesma linguagem das tiras da pilha de

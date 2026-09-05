@@ -29,6 +29,18 @@ import type { NomeIcone } from "@/components/ui/Icone";
 export const TITULO = "Segurança, construção e impacto. Tudo num só lugar.";
 
 export const HEROI = {
+  /**
+   * A fotografia do herói, a mesma que jsk.pt serve.
+   *
+   * O `alt` descreve o que lá está, e foi escrito depois de olhar para o
+   * ficheiro — que é o que `docs/assets.md` pede. Não repete o número de
+   * telefone que está pintado no sinal: um número dentro de uma imagem não se
+   * corrige com texto alternativo, e este não é o que o site mostra.
+   */
+  imagem: {
+    src: "/heroi/sinal-e-camara.webp",
+    alt: "Sinal amarelo da JSK montado num poste, com o logótipo em forma de casa e o endereço www.jsk.pt, ao lado de uma câmara de videovigilância voltada para a rua.",
+  },
   entrada:
     "Na JSK, combinamos experiência técnica com criatividade para oferecer soluções completas em segurança, construção e comunicação visual. Garantimos projetos eficientes, modernos e à medida das suas necessidades.",
   primaria: { texto: "Peça um Orçamento Gratuito", href: "/contactos/" },

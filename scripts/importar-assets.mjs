@@ -44,6 +44,9 @@ const BASE = "https://jsk.pt/wp-content/uploads/";
  * que a `Medida` permite, cada uma ocupa uns 380px CSS, ou seja 760px num ecrã
  * de densidade dupla. 1200 dá folga para um ecrã maior sem carregar os
  * originais de 2000px que o WordPress guardava.
+ *
+ * Um asset pode pedir outra largura em `largura`. Quem o faz hoje é o fundo do
+ * herói, que é ecrã inteiro e não um cartão de um terço.
  */
 const LARGURA_MAXIMA = 1200;
 
@@ -51,9 +54,19 @@ const LARGURA_MAXIMA = 1200;
 const QUALIDADE = 78;
 
 /**
+ * WebP a 82 para o herói.
+ *
+ * O original é um PNG de 2 MB gerado por IA — superfícies lisas e degradês de
+ * céu, que é onde o JPEG cria bandas e o WebP não. A 82 não se distingue do
+ * PNG a olho e desce uma ordem de grandeza no peso.
+ */
+const QUALIDADE_WEBP = 82;
+
+/**
  * O que se importa, e com que nome fica.
  *
- * A galeria de `/alarmes/`, seis fotografias. A ordem é a do site actual.
+ * A galeria de `/alarmes/`, seis fotografias, mais o fundo do herói da
+ * homepage. A ordem das seis é a do site actual.
  */
 const ASSETS = [
   {
@@ -80,6 +93,16 @@ const ASSETS = [
     /* `akarme` é gralha do cliente no nome do ficheiro — defeito #8. */
     origem: "2025/08/akarme-de-incendio-e1754606123466.jpg",
     destino: "projectos/alarme-de-incendio.jpg",
+  },
+  {
+    /* O fundo do herói da homepage. O nome de origem é o da ferramenta que a
+       gerou, com a data e a hora — e o nome do ficheiro aparece no URL, que é
+       público. O original tem 1536×1024 e não há maior no servidor do cliente:
+       `largura` aqui não é para reduzir, é para não deixar o valor por omissão
+       de 1200 cortar 336px que fazem falta num fundo de ecrã inteiro. */
+    origem: "2025/08/ChatGPT-Image-10_08_2025-22_10_03.png",
+    destino: "heroi/sinal-e-camara.webp",
+    largura: 1536,
   },
 ];
 
@@ -125,7 +148,22 @@ async function garantirOriginal(origem) {
   return destino;
 }
 
-async function processar({ origem, destino }) {
+/**
+ * O formato de saída sai da extensão do destino, e não de uma opção à parte.
+ *
+ * O destino já é a única coisa que diz onde o ficheiro vai parar; que fique a
+ * dizer também em que formato. Assim não há como ter um `.webp` gravado em
+ * JPEG por alguém se ter esquecido de mudar as duas coisas.
+ */
+function codificar(pipeline, destino) {
+  if (path.extname(destino) === ".webp") {
+    return pipeline.webp({ quality: QUALIDADE_WEBP, effort: 6 });
+  }
+
+  return pipeline.jpeg({ quality: QUALIDADE, mozjpeg: true });
+}
+
+async function processar({ origem, destino, largura = LARGURA_MAXIMA }) {
   const entrada = await garantirOriginal(origem);
   const saida = path.join(PUBLICO, destino);
 
@@ -134,14 +172,15 @@ async function processar({ origem, destino }) {
     return;
   }
 
-  const bytes = await sharp(entrada)
-    /* Sem isto, uma fotografia tirada com o telemóvel de lado sai deitada: o
-       `resize` trabalha nos pixels e a orientação vive nos metadados EXIF, que
-       o `sharp` remove ao gravar. */
-    .rotate()
-    .resize({ width: LARGURA_MAXIMA, withoutEnlargement: true })
-    .jpeg({ quality: QUALIDADE, mozjpeg: true })
-    .toBuffer();
+  const bytes = await codificar(
+    sharp(entrada)
+      /* Sem isto, uma fotografia tirada com o telemóvel de lado sai deitada: o
+         `resize` trabalha nos pixels e a orientação vive nos metadados EXIF,
+         que o `sharp` remove ao gravar. */
+      .rotate()
+      .resize({ width: largura, withoutEnlargement: true }),
+    destino,
+  ).toBuffer();
 
   const { width, height } = await sharp(bytes).metadata();
 
@@ -163,16 +202,24 @@ async function principal() {
     await processar(asset);
   }
 
-  const pasta = path.join(PUBLICO, "projectos");
-  const total = (
-    await Promise.all(
-      (await readdir(pasta)).map(async (nome) =>
-        (await stat(path.join(pasta, nome))).size,
-      ),
-    )
-  ).reduce((soma, tamanho) => soma + tamanho, 0);
+  /* As pastas vêm dos destinos e não de uma lista à parte: acrescentar um
+     asset numa pasta nova passa a contá-la sem ninguém se lembrar disso. */
+  const pastas = [...new Set(ASSETS.map(({ destino }) => path.dirname(destino)))];
 
-  console.log(`\npublic/projectos/: ${kb(total)} no total.`);
+  console.log("");
+
+  for (const pasta of pastas.sort()) {
+    const caminho = path.join(PUBLICO, pasta);
+    const total = (
+      await Promise.all(
+        (await readdir(caminho)).map(async (nome) =>
+          (await stat(path.join(caminho, nome))).size,
+        ),
+      )
+    ).reduce((soma, tamanho) => soma + tamanho, 0);
+
+    console.log(`public/${pasta}/: ${kb(total)} no total.`);
+  }
 }
 
 principal().catch((erro) => {
