@@ -5,11 +5,16 @@ GSAP". Este ficheiro é o resto da frase.
 
 ## A decisão
 
-**O movimento deste site é CSS, e não há JavaScript de animação nenhum.**
+**O movimento deste site é CSS. Não escrevemos JavaScript de animação nenhum.**
 
 Nem biblioteca, nem `requestAnimationFrame`, nem um único `addEventListener`
-de scroll. As linhas temporais são as do browser — `animation-timeline: view()`
-e `scroll()` — e os contadores contam com `@property` e `counter()`.
+de scroll da nossa parte. As linhas temporais são as do browser —
+`animation-timeline: view()` e `scroll()` — e os contadores contam com
+`@property` e `counter()`.
+
+A única excepção é o **polyfill**, e está descrita mais abaixo: não é código de
+animação nosso, é o motor que falta a um browser. O CSS continua a ser a fonte
+de verdade única; o polyfill lê-o e executa-o, não o substitui.
 
 O que isto poupa, medido contra o site antigo: jQuery, `jquery-numerator`,
 `waypoints`, o handler de scroll não estrangulado da `/web/`, e o JS de
@@ -96,6 +101,54 @@ O Tailwind v4 já põe o `hover:` dentro de `@media (hover: hover)`, mas falta-l
 o `pointer: fine`. A variante está redefinida em `app/globals.css`, o que apanha
 todos os `hover:` do projecto de uma vez — mais seguro do que confiar que quem
 escreve o próximo se lembra da regra.
+
+## O Safari, e o polyfill
+
+**O problema.** Até ao Safari 26 não existe `animation-timeline`. Um Safari 18
+serve a página completa e legível — que é o que a regra acima garante — e
+absolutamente parada. E no iOS **todos** os browsers são WebKit por baixo, a
+app do Chrome incluída, por isso "Safari antigo" quer dizer "todos os iPhones
+que ainda não actualizaram".
+
+Descoberto a 5 de Setembro de 2026, num Safari 18.5 sobre macOS 15.5. O
+diagnóstico é sempre o mesmo e distingue-se de um bug em dois segundos: se
+**nada** mexe e a página está inteira e certa, é falta de suporte; se mexe mal,
+é defeito nosso.
+
+**A decisão.** Carregar o [`scroll-timeline-polyfill`][p] — o
+`flackr/scroll-timeline`, implementação de referência da especificação — **só
+nos browsers que não suportam**. 17 KB comprimidos, pagos por quem precisa e
+por mais ninguém.
+
+[p]: https://github.com/flackr/scroll-timeline
+
+Foi pesado contra as alternativas:
+
+| Saída | Porque não |
+|---|---|
+| Aceitar e não fazer nada | O brief deste site é "a casa arma-se à tua frente enquanto desces". Para metade de quem entra, essa frase não acontecia |
+| `IntersectionObserver` à mão | Mais leve, mas dispara em vez de esfregar. As cenas fixas — a casa, o painel, a faixa dos números — perdem exactamente o que têm de melhor, que é andarem ao ritmo da mão de quem desce |
+
+**Três coisas que o fazem funcionar**, e que estão comentadas em
+`app/layout.tsx` porque é lá que se mexe nelas:
+
+1. **Corre antes da pintura.** Carregado tarde, o Safari pinta a página
+   completa e só então os elementos saltam para o início da animação —
+   conteúdo que aparece e desaparece, pior do que não ter movimento. Daí um
+   `document.write` enquanto o documento ainda está a ser lido.
+2. **O `document.write` é guardado por `readyState`.** Chamado com o documento
+   já fechado, apaga a página inteira.
+3. **A detecção é a mesma do `@supports`** do `movimento.css`, para que a
+   fronteira entre o que anima e o que carrega o motor seja literalmente a
+   mesma condição.
+
+O ficheiro em `public/polyfill/` é versionado de propósito, e não gerado no
+build: se a cópia falhasse em silêncio num deploy, o Safari perdia as animações
+e mais ninguém dava por isso. Actualiza-se com `npm run polyfill`, e a versão
+fica escrita no cabeçalho do ficheiro para aparecer no `git diff`.
+
+**Isto sai daqui** no dia em que o Safari 26 tiver uso suficiente. É uma
+dependência com data de validade, e é bom que seja.
 
 ## O que ainda não está verificado
 

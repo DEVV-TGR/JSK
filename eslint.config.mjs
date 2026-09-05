@@ -16,6 +16,10 @@ const eslintConfig = defineConfig([
     // corrigir. Sem esta linha o lint devolve mais de cem avisos que não são do
     // site e que escondem os que são.
     ".claude/**",
+    // Pela mesma razão: o `public/` é o que se serve, não o que se escreve. Lá
+    // dentro está o polyfill do scroll-timeline, minificado, que sozinho traz
+    // 144 avisos de código que não é nosso para corrigir.
+    "public/**",
   ]),
 ]);
 
