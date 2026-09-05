@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { HeroiAlarmes } from "@/components/seccoes/alarmes/HeroiAlarmes";
 import { PainelQueArma } from "@/components/seccoes/alarmes/PainelQueArma";
-import { Processo } from "@/components/seccoes/alarmes/Processo";
+import { Processo } from "@/components/seccoes/Processo";
 import { Projectos } from "@/components/seccoes/alarmes/Projectos";
 import { ServicosAlarmes } from "@/components/seccoes/alarmes/ServicosAlarmes";
 import { BandaOrcamento } from "@/components/seccoes/BandaOrcamento";

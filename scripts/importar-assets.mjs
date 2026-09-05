@@ -65,8 +65,8 @@ const QUALIDADE_WEBP = 82;
 /**
  * O que se importa, e com que nome fica.
  *
- * A galeria de `/alarmes/`, seis fotografias, mais o fundo do herói da
- * homepage. A ordem das seis é a do site actual.
+ * A galeria de `/alarmes/`, os fundos de herói da homepage e da `/obras/`, e
+ * a galeria de `/obras/`. A ordem dentro de cada grupo é a do site actual.
  */
 const ASSETS = [
   {
@@ -103,6 +103,37 @@ const ASSETS = [
     origem: "2025/08/ChatGPT-Image-10_08_2025-22_10_03.png",
     destino: "heroi/sinal-e-camara.webp",
     largura: 1536,
+  },
+
+  /* ── /obras/ ─────────────────────────────────────────────────────────────
+     Cinco fotografias, e são **dois trabalhos** mais o herói: a moradia com
+     andaime, uma casa em duas divisões, e uma loja em duas vistas.
+
+     Os nomes de destino dizem o que se vê e não de quem é. As duas últimas
+     chamam-se `Obras-Panda-Pet` na origem — `Panda Pet` é o negócio de outra
+     pessoa, e o nome do ficheiro aparece no URL, que é público. */
+  {
+    /* Fundo de ecrã inteiro, como o herói da homepage: WebP e a largura
+       nativa do original, que aqui são 1600. */
+    origem: "2025/08/Banner-Obras.jpeg",
+    destino: "obras/moradia-com-andaime.webp",
+    largura: 1600,
+  },
+  {
+    origem: "2025/08/Obras-cozinha-1.jpeg",
+    destino: "obras/cozinha-acabada.jpg",
+  },
+  {
+    origem: "2025/08/Obras-cozinha-2.jpeg",
+    destino: "obras/sala-aberta.jpg",
+  },
+  {
+    origem: "2025/08/Obras-Panda-Pet.jpeg",
+    destino: "obras/loja-balcao.jpg",
+  },
+  {
+    origem: "2025/08/Obras-Panda-Pet-2.jpeg",
+    destino: "obras/loja-prateleiras.jpg",
   },
 ];
 

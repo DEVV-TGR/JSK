@@ -69,6 +69,34 @@
   stroke-dashoffset: 0;
 }
 
+/* O prumo do andaime, na cena dos três blocos. Nasce inteiro: é o que liga os
+   três e sem ele os blocos ficam soltos.
+
+   Não usa o `.revela`. O `.revela` é um `clip-path` que limpa da esquerda para
+   a direita, e numa linha de 3px de largura isso acontece de uma vez — o
+   prumo apareceria em cheio em vez de descer. Aqui é `scaleY` com a origem em
+   cima, que é o que faz um prumo crescer para baixo. */
+.prumo {
+  transform: scaleY(1);
+  transform-origin: 50% 0;
+}
+
+/* As pranchas do andaime nascem **fora** da moldura: o estado final desta cena
+   é o andaime desmontado e a obra à vista. Sem linha temporal vê-se a cozinha
+   limpa com os prumos e a base por cima — o fim da obra, e não um andaime
+   preso a meio.
+
+   Os 360 são maiores do que os 300 de largura do `viewBox` de propósito: é o
+   que garante que a prancha sai de vez, seja qual for o tamanho do desenho no
+   ecrã. Quem a corta é o `overflow-hidden` da moldura.
+
+   O `--lado` vem do `style` de cada nível e alterna: uma prancha para a
+   direita, a seguinte para a esquerda. */
+.andaime-nivel {
+  transform-box: view-box;
+  transform: translateX(calc(var(--lado, 1) * 360px));
+}
+
 /* A câmara nasce virada para o fim do varrimento — uma câmara instalada e a
    apontar, e não um desenho a meio. O eixo é o ponto onde o braço encosta à
    chapa do suporte, e as coordenadas são as do `viewBox`, o que obriga a
@@ -105,6 +133,41 @@
       animation: monta linear both;
       animation-timeline: view();
       animation-range: entry 0% entry calc(40% + var(--i, 0) * 14%);
+    }
+
+    /* ── O prumo que desce ───────────────────────────────────────────────
+       Fecha em `entry` e não em `contain`: o bloco dos três serviços é mais
+       alto do que o ecrã, e o prumo tem de estar inteiro quando o terceiro
+       bloco for lido — não quando a cena acabar de passar. */
+    .prumo {
+      animation: desce linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 95%;
+    }
+
+    /* ── O andaime que se desmonta ───────────────────────────────────────
+       Quatro níveis, uma linha temporal só, o intervalo deslocado por `--i`:
+       a prancha de cima sai primeiro e a de baixo por último. É a ordem por
+       que um andaime se desmonta a sério, e sai da posição no scroll — não há
+       temporizadores a dessincronizar-se.
+
+       O intervalo é `contain` porque é exactamente o tempo em que a cena está
+       encostada ao ecrã. O último nível fecha aos 82%, ainda com a cena à
+       vista: um `cover 100%` nunca chegaria ao fim e a última prancha ficava
+       presa a meio caminho para sempre.
+
+       O atalho `animation` vem **antes** do `animation-timeline` e do
+       `animation-range` — escrito depois, reinicia os dois em silêncio e a
+       animação cai na linha temporal do documento. */
+    .andaime {
+      view-timeline: --andaime block;
+    }
+
+    .andaime-nivel {
+      animation: desmonta linear both;
+      animation-timeline: --andaime;
+      animation-range: contain calc(var(--i, 0) * 16%) contain
+        calc(var(--i, 0) * 16% + 34%);
     }
 
     /* ── A câmara que varre ──────────────────────────────────────────────
@@ -411,6 +474,27 @@
   }
   to {
     transform: scaleX(1);
+  }
+}
+
+@keyframes desce {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* A prancha a sair. Só `transform` — a opacidade fica de fora de propósito:
+   uma prancha que se desvanece a meio do percurso lê-se como um fantasma, e o
+   que se quer é uma peça a ser retirada. Quem a faz desaparecer é a moldura. */
+@keyframes desmonta {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--lado, 1) * 360px));
   }
 }
 
