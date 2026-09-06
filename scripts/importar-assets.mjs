@@ -137,6 +137,27 @@ const ASSETS = [
     destino: "obras/loja-prateleiras.jpg",
   },
 
+  /* ── /sobre-nos/ ─────────────────────────────────────────────────────────
+     Uma fotografia, e é a melhor que este site tem.
+
+     A chapa amarela da JSK montada numa parede, com duas câmaras dome de cada
+     lado. É literalmente o objecto de que todo o sistema de desenho saiu — o
+     `docs/brief-experiencia.md` diz que o registo industrial não é gosto,
+     porque «o logótipo da empresa é um sinal de trânsito». Aqui está o sinal,
+     na parede, a fazer o trabalho.
+
+     Duas notas sobre o ficheiro: tem uma marca de água `Galaxy S24 Ultra` no
+     canto inferior esquerdo, que é do telefone que a tirou; e a chapa mostra
+     o telefone `929 153 103`, que é o número que o rodapé **marca** e não o
+     que mostra — ver `docs/decisoes-pendentes.md`, ponto 4.
+
+     Fica à largura nativa: são 957px e não há maior. */
+  {
+    origem: "2025/08/JSK-Image2-e1756316573928.jpg",
+    destino: "sobre/chapa-e-camaras.webp",
+    largura: 957,
+  },
+
   /* ── /screens-led/ ───────────────────────────────────────────────────────
      Uma fotografia, uma fotografia de produto, e o vídeo.
 

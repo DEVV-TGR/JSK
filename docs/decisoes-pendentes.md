@@ -88,8 +88,25 @@ para um número diferente daquele que está a ler. E o logótipo tem um número
 **gravado no bitmap** (o ficheiro chama-se `Sinal-JSK-com-Numero-de-Telefone`),
 que pode ser um terceiro valor ou um dos dois.
 
-**Está em `lib/site.ts`:** `+351 963 085 319`, por ser o único onde o que se lê
-e o que se marca coincidem. É uma escolha provisória à espera de confirmação.
+**Respondido a 6 de Setembro de 2026: o número é `929 153 103`.**
+
+Ou seja, **o número que o site actual mostra em nove páginas está errado**, e o
+certo é o que os `href` já marcavam. A escolha provisória que estava em
+`lib/site.ts` — o `963 085 319`, por ser o único sítio onde o que se lê e o que
+se marca coincidiam — era a suposição errada.
+
+A prova apareceu por acaso, a construir a `/sobre-nos/`: a fotografia
+`JSK-Image2` mostra a chapa que a empresa monta nas paredes dos clientes, e a
+chapa tem **`929 153 103`** impresso, ao lado de `www.jsk.pt`. O Gonçalo
+confirmou-o a seguir.
+
+*(Nota lateral: o mockup gerado por IA que o site usa na `/web/` mostra
+`929 153 105`, com o último dígito trocado. É mais um argumento para não pôr
+imagens de IA num site — inventam números de telefone.)*
+
+Aplicado em `lib/site.ts`, de onde saem o rodapé, os botões de chamada, a
+`/contactos/` e o JSON-LD. Fica por resolver o ponto 11: o logótipo tem um
+número **gravado no bitmap**, e é preciso saber se é este.
 
 ---
 

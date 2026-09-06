@@ -53,16 +53,24 @@ export const site = {
   email: "jskalarmes@gmail.com",
 
   /**
-   * ⚠️ POR CONFIRMAR — qual dos dois é o verdadeiro.
+   * **Confirmado pelo Gonçalo a 6 de Setembro de 2026.**
    *
-   * O site actual anda com dois números ao mesmo tempo: mostra este em todo o
-   * lado, mas os `href` do rodapé e do botão "Ligue-nos Agora" marcam
-   * `929 153 103`. A página /contactos/ é a única onde o que se lê e o que se
-   * marca coincidem — e coincidem neste. É por isso que é este que está aqui.
-   * Provável que o segundo seja um número antigo, mas isso é uma suposição e
-   * suposições não vão para o site de um cliente.
+   * O site actual anda com dois números ao mesmo tempo: **mostra**
+   * `963 085 319` em todo o lado, mas os `href` do rodapé e do botão
+   * "Ligue-nos Agora" **marcam** `929 153 103`. Durante todo o arranque deste
+   * projecto esteve aqui o primeiro, porque a `/contactos/` era a única página
+   * onde o que se lê e o que se marca coincidiam — e coincidiam nesse.
+   *
+   * Era a suposição errada. O verdadeiro é o que os `href` marcavam, e a prova
+   * apareceu na fotografia da `/sobre-nos/`: a chapa que a empresa monta nas
+   * paredes dos clientes tem `929 153 103` impresso. Ver
+   * `docs/decisoes-pendentes.md`, ponto 4.
+   *
+   * Consequência: o número que o site actual **mostra** em nove páginas está
+   * errado, e este é o valor que passa a alimentar o rodapé, os botões de
+   * chamada, a `/contactos/` e o JSON-LD.
    */
-  telefone: "+351 963 085 319",
+  telefone: "+351 929 153 103",
 
   /**
    * ⚠️ EM FALTA — o NIF e a denominação social são de indicação obrigatória

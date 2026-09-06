@@ -41,7 +41,8 @@
    levam `pathLength="1"` no SVG, o que normaliza qualquer comprimento a 1 e
    dispensa medir cada um em JavaScript. */
 .casa-traco,
-.casa-perimetro {
+.casa-perimetro,
+.converge-traco {
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
 }
@@ -248,6 +249,71 @@
       animation: risca linear both;
       animation-timeline: view();
       animation-range: entry 10% entry calc(50% + var(--i, 0) * 12%);
+    }
+
+    /* ── Os quatro que convergem ─────────────────────────────────────────
+       O pico da `/sobre-nos/`. Quatro traços entram pelas arestas, cada um com
+       o nome do seu sector, e convergem na chapa da JSK ao centro — que acende
+       quando o quarto chega.
+
+       **É o único gesto do site que junta.** Todos os outros montam: a casa
+       arma-se, o painel arma, o andaime desmonta-se, a parede monta-se, o site
+       constrói-se. Este converge, e é a frase da visão desenhada — «entregar
+       soluções completas num só parceiro». Numa página que não vende serviço
+       nenhum, é o argumento que há.
+
+       Zero fotogramas novos: o `traca` é o do traço da casa, o `acorda` é o do
+       painel, o `entra` é o de toda a gente.
+
+       Os caminhos levam `pathLength="1"` no SVG, o que normaliza qualquer
+       comprimento a 1 e dispensa medir cada um em JavaScript — os quatro têm
+       comprimentos diferentes e chegam ao mesmo tempo à sua vez. */
+    @media (min-width: 64rem) {
+      .converge {
+        view-timeline: --converge block;
+      }
+
+      .converge-traco {
+        animation: traca linear both;
+        animation-timeline: --converge;
+        animation-range: contain calc(var(--i, 0) * 14%) contain
+          calc(var(--i, 0) * 14% + 28%);
+      }
+
+      /* A etiqueta acende com o início do seu traço, não no fim: quem lê tem
+         de saber de onde vem a linha enquanto ela está a ser desenhada. */
+      .converge-etiqueta {
+        animation: acorda linear both;
+        animation-timeline: --converge;
+        animation-range: contain calc(var(--i, 0) * 14%) contain
+          calc(var(--i, 0) * 14% + 12%);
+      }
+
+      /* O último traço fecha aos 70%. A chapa acende a seguir, com travagem —
+         em linear lê-se como um interruptor, e o que se quer é uma chegada. */
+      .converge-chapa {
+        animation: acorda cubic-bezier(0.33, 0, 0.15, 1) both;
+        animation-timeline: --converge;
+        animation-range: contain 72% contain 92%;
+      }
+
+      .converge-estado {
+        animation: entra linear both;
+        animation-timeline: --converge;
+        animation-range: contain 86% contain 98%;
+      }
+    }
+
+    /* Abaixo de `lg` a cena não é fixa — o desenho mais as quatro etiquetas não
+       cabem no ecrã de um telemóvel, e uma cena fixa que não cabe corta o que
+       lá está. Mesma saída do `.painel` da `/alarmes/`. Os traços continuam a
+       desenhar-se, mas pela posição da própria cena. */
+    @media (max-width: 63.999rem) {
+      .converge-traco {
+        animation: traca linear both;
+        animation-timeline: view();
+        animation-range: entry 10% entry calc(45% + var(--i, 0) * 10%);
+      }
     }
 
     /* ── Os serviços que armam ───────────────────────────────────────────
