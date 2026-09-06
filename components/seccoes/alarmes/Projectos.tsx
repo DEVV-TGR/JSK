@@ -22,10 +22,10 @@ export function Projectos() {
   return (
     <Seccao terreno="papel">
       <Medida>
-        <h2 className="text-cena font-titulo max-w-[16ch] font-extrabold">
+        <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
           {PROJECTOS.titulo}
         </h2>
-        <p className="text-chumbo mt-6 max-w-[58ch] text-[1.0625rem] leading-relaxed">
+        <p className="text-chumbo mt-6 max-w-[var(--medida-texto)] text-[1.0625rem] leading-relaxed">
           {PROJECTOS.intro}
         </p>
 

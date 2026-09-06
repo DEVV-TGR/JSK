@@ -15,10 +15,12 @@ export function ApresentacaoWeb() {
   return (
     <Seccao terreno="papel">
       <Medida>
-        <h2 className="text-cena font-titulo max-w-[18ch] font-extrabold">
+        <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
           {APRESENTACAO.titulo}
         </h2>
-        <p className="text-guia text-chumbo entra mt-8 max-w-[68ch]">
+        {/* Sem trela: já são duas colunas, e um `max-w` por cima delas
+            estrangulava as duas em vez de dar medida a cada uma. */}
+        <p className="text-guia text-chumbo entra mt-8 sm:columns-2 sm:gap-14">
           {APRESENTACAO.texto}
         </p>
       </Medida>

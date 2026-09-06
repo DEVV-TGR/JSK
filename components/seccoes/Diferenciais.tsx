@@ -171,7 +171,7 @@ export function Diferenciais() {
             grelha estica à altura da linha por omissão, e uma caixa tão alta
             como o que a rodeia nunca tem por onde deslizar. */}
         <div className="lg:sticky lg:top-[calc(4.5rem+var(--espaco-bloco))] lg:h-fit">
-          <h2 className="text-cena font-titulo max-w-[16ch] font-extrabold">
+          <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
             {DIFERENCIAIS.titulo}
           </h2>
 
@@ -204,7 +204,7 @@ export function Diferenciais() {
                 {item.titulo}
               </h3>
 
-              <p className="text-chumbo col-start-2 mt-3 max-w-[46ch] text-[0.9375rem] leading-relaxed">
+              <p className="text-chumbo col-start-2 mt-3 max-w-[var(--medida-texto)] text-[0.9375rem] leading-relaxed">
                 {item.texto}
               </p>
 

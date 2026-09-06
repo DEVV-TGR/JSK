@@ -85,6 +85,29 @@
      Um só passo, usado em toda a parte. Densidade sem ritmo é ruído. */
   --espaco-cena: clamp(5rem, 12vw, 10rem);
   --espaco-bloco: clamp(2.5rem, 5vw, 4.5rem);
+
+  /* ── Medida ──────────────────────────────────────────────────────────────
+     Duas trelas, e as mesmas em toda a parte. Pela mesma razão do ritmo
+     acima: medida sem regra é ruído.
+
+     Antes disto cada componente inventava a sua — dezassete títulos com cinco
+     valores diferentes, vinte parágrafos com onze — e o resultado era que
+     **os títulos ficavam presos a meia largura por regra**. A conta: a
+     `Medida` dá 1136px de conteúdo a 1440px de ecrã, um `text-cena` mede 68px
+     nesse ecrã, e a esse corpo cabem uns 33 caracteres numa linha cheia. Com
+     trela de 16ch, um título usava 48% do que tinha.
+
+     É o defeito que a `Medida` resolveu nos contentores, repetido uma camada
+     abaixo.
+
+     O `ch` é deliberado: resolve contra a fonte **do próprio elemento**, por
+     isso a medida acompanha o corpo do texto sem uma segunda conta a manter.
+
+     Quem não usa isto, e porquê: os heróis, onde o `text-chapa` se parte em
+     duas linhas de propósito porque um sinal mais alto tem mais escala; e os
+     títulos dentro de cenas fixas, que dividem o ecrã com o desenho ao lado. */
+  --medida-titulo: 28ch;
+  --medida-texto: 64ch;
 }
 
 /* ═════════════════════════════════════════════════════════════════════════

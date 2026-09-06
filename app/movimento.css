@@ -250,6 +250,93 @@
       animation-range: entry 10% entry calc(50% + var(--i, 0) * 12%);
     }
 
+    /* ── Os serviços que armam ───────────────────────────────────────────
+       O dispositivo das zonas do `PainelQueArma`, aplicado aos seis serviços
+       da `/web/`: o LED acende ao lado de cada um e o texto limpa-se logo a
+       seguir.
+
+       **Sem `pin`, e é a diferença que interessa.** Na `/alarmes/` isto vive
+       dentro de uma cena fixa; aqui não pode, porque o `SiteQueSeConstroi`
+       encosta ao ecrã imediatamente antes e duas cenas fixas seguidas põem a
+       página a lutar com quem desce. Em vez da linha temporal da cena, cada
+       item pende da sua própria — mesmo gesto, sem o segundo encosto.
+
+       Zero fotogramas novos: o `acende` é o do LED do painel, o `revela` é o
+       das listas. */
+    .servico-led {
+      animation: acende linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry calc(40% + var(--i, 0) * 8%);
+    }
+
+    .servico-texto {
+      animation: revela linear both;
+      animation-timeline: view();
+      animation-range: entry 16% entry calc(52% + var(--i, 0) * 8%);
+    }
+
+    /* ── O trilho dos trabalhos ──────────────────────────────────────────
+       A faixa dos seis trabalhos atravessa o ecrã e cada um aparece à medida
+       que passa.
+
+       Mecânica da `.pista` dos contadores: a secção alta declara a linha
+       temporal, a faixa lá dentro anda por `translate3d`, e o `--percurso` é a
+       largura da faixa menos a do ecrã. **Não é rapto de scroll** — nada
+       intercepta o evento, a página anda ao ritmo de sempre e o que se move é
+       o conteúdo.
+
+       ⚠️ **O que a `.pista` faz mal e este não repete.** No `Contadores`, o
+       `h-[340svh]` e o `sticky` estão nas classes do componente, fora do
+       `@supports`. Num browser sem `animation-timeline` a faixa fica na
+       posição zero, o `overflow-hidden` corta o resto, e vêem-se dois
+       contadores mais 340svh de nada. Aqui a altura, o encosto e o
+       `flex-wrap: nowrap` vivem **dentro** do `@supports`: sem suporte, ou
+       abaixo de `lg`, a mesma marcação cai em `wrap` e os seis cartões ficam
+       numa grelha visível — que é o estado final desta cena. */
+    @media (min-width: 64rem) {
+      .trilho {
+        view-timeline: --trilho block;
+        height: 300svh;
+      }
+
+      .trilho-cena {
+        position: sticky;
+        top: 4.5rem;
+        display: flex;
+        height: calc(100svh - 4.5rem);
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .trilho-faixa {
+        flex-wrap: nowrap;
+        animation: viaja-trilho linear both;
+        animation-timeline: --trilho;
+        animation-range: contain 0% contain 100%;
+      }
+
+      /* Cada trabalho **acende** quando a faixa o traz ao centro — e não se
+         limpa.
+
+         A primeira versão usava o `revela`, e estava errada: o trilho já faz
+         os cartões aparecerem, porque entram pela aresta direita da cena. Um
+         `clip-path` por cima disso produzia meios-cartões parados a meio do
+         ecrã, e os que ainda não tinham chegado à sua vez ficavam invisíveis
+         mesmo com espaço para eles — lia-se como avaria, não como intenção.
+
+         O `acorda` parte de 0.25 de opacidade: os seis estão sempre lá, os que
+         ainda não chegaram estão apagados, e o que está ao centro é o que se
+         lê. É o mesmo gesto do `.pista-painel` da homepage, e pela mesma
+         razão. */
+      .trilho-item {
+        animation: acorda cubic-bezier(0.33, 0, 0.15, 1) both;
+        animation-timeline: --trilho;
+        animation-range: contain calc(var(--i, 0) * 16%) contain
+          calc(var(--i, 0) * 16% + 14%);
+      }
+    }
+
     /* ── O site que se constrói ──────────────────────────────────────────
        O pico da `/web/`. Uma moldura de página que se faz em quatro fases,
        pela ordem por que um site se faz a sério:
@@ -831,6 +918,20 @@
   }
   to {
     opacity: 0.16;
+  }
+}
+
+/* A faixa dos trabalhos, contínua.
+   O `viaja` dos contadores tem quatro paragens escritas no fotograma, e serve
+   quatro números que é preciso ler parados. Aqui são seis cartões e o que se
+   lê é o nome por baixo de cada um — uma travessia contínua chega, e evita um
+   fotograma com seis paragens a manter. */
+@keyframes viaja-trilho {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(var(--percurso, 0px) * -1), 0, 0);
   }
 }
 

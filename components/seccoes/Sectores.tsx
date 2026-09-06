@@ -18,7 +18,7 @@ export function Sectores() {
   return (
     <section className="bg-asfalto text-papel pb-[var(--espaco-bloco)]">
       <Medida className="pt-[var(--espaco-cena)] pb-[var(--espaco-bloco)]">
-        <h2 className="text-cena font-titulo max-w-[16ch] font-extrabold">
+        <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
           Quatro sectores, um só parceiro.
         </h2>
       </Medida>
@@ -62,7 +62,7 @@ export function Sectores() {
                     <h3 className="text-cena font-titulo font-extrabold">
                       {sector.nome}
                     </h3>
-                    <p className="text-grafite mt-5 max-w-[44ch] text-[1.0625rem] leading-relaxed">
+                    <p className="text-grafite mt-5 max-w-[var(--medida-texto)] text-[1.0625rem] leading-relaxed">
                       {sector.texto}
                     </p>
                     <Link

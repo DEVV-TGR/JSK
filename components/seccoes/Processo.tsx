@@ -20,7 +20,7 @@ export function Processo() {
   return (
     <Seccao terreno="betao">
       <Medida>
-        <h2 className="text-cena font-titulo max-w-[14ch] font-extrabold">
+        <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
           {PROCESSO.titulo}
         </h2>
 

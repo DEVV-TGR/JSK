@@ -40,7 +40,7 @@ export function ServicosAlarmes() {
               {SERVICOS.intro[0]}
             </p>
             <p
-              className="entra text-chumbo mt-6 max-w-[62ch] text-[1.0625rem] leading-relaxed"
+              className="entra text-chumbo mt-6 max-w-[var(--medida-texto)] text-[1.0625rem] leading-relaxed"
               style={{ "--i": 1 } as React.CSSProperties}
             >
               {SERVICOS.intro[1]}

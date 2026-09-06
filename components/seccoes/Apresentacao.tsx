@@ -52,7 +52,7 @@ export function Apresentacao() {
                 {APRESENTACAO.paragrafos[0]}
               </p>
               <p
-                className="entra text-chumbo mt-6 max-w-[62ch] text-[1.0625rem] leading-relaxed"
+                className="entra text-chumbo mt-6 max-w-[var(--medida-texto)] text-[1.0625rem] leading-relaxed"
                 style={{ "--i": 1 } as React.CSSProperties}
               >
                 {APRESENTACAO.paragrafos[1]}

@@ -18,11 +18,11 @@ export function ChamadaDevPlus() {
   return (
     <Seccao terreno="betao">
       <Medida>
-        <h2 className="text-cena font-titulo max-w-[14ch] font-extrabold">
+        <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
           {FECHO.titulo}
         </h2>
 
-        <p className="text-guia text-grafite entra mt-8 max-w-[62ch]">
+        <p className="text-guia text-grafite entra mt-8 max-w-[var(--medida-texto)]">
           {FECHO.texto}
         </p>
 

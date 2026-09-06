@@ -18,7 +18,7 @@ export function AplicacoesScreens() {
   return (
     <Seccao terreno="asfalto">
       <Medida>
-        <h2 className="text-cena font-titulo max-w-[20ch] font-extrabold">
+        <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
           {APLICACOES.titulo}
         </h2>
 

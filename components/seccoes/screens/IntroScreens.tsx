@@ -23,10 +23,10 @@ export function IntroScreens() {
       <Medida>
         <div className="grid items-start gap-x-16 gap-y-10 lg:grid-cols-[1fr_auto]">
           <div>
-            <h2 className="text-cena font-titulo max-w-[18ch] font-extrabold">
+            <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
               {INTRO.titulo}
             </h2>
-            <p className="text-chumbo mt-6 max-w-[58ch] text-[1.0625rem] leading-relaxed">
+            <p className="text-chumbo mt-6 max-w-[var(--medida-texto)] text-[1.0625rem] leading-relaxed">
               {INTRO.texto}
             </p>
           </div>

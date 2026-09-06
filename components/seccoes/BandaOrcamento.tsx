@@ -24,10 +24,10 @@ export function BandaOrcamento() {
         <Medida>
           <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
-              <h2 className="text-cena font-titulo max-w-[14ch] font-extrabold">
+              <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
                 {BANDA_ORCAMENTO.titulo}
               </h2>
-              <p className="text-guia mt-6 max-w-[46ch] font-medium">
+              <p className="text-guia mt-6 max-w-[var(--medida-texto)] font-medium">
                 Diga-nos o que precisa. Respondemos com um orçamento claro e sem
                 compromisso.
               </p>

@@ -41,7 +41,7 @@ export function ComprarOuAlugar() {
     <>
       <Seccao terreno="papel">
         <Medida>
-          <h2 className="text-cena font-titulo max-w-[16ch] font-extrabold">
+          <h2 className="text-cena font-titulo max-w-[var(--medida-titulo)] font-extrabold">
             {COMPARACAO.titulo}
           </h2>
 
