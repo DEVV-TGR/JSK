@@ -70,12 +70,25 @@ sem alguém confirmar.
 E não se inventa um testemunho, um horário, uma avaliação ou um NIF. Um horário
 inventado num JSON-LD passa a ser o horário que a Google mostra a toda a gente.
 
-## Branches, nunca worktrees
+## Commits directos na `main`
 
-Um branch por tópico, um PR por branch. Nada de worktrees — o
-`.claude/settings.json` desliga o isolamento por worktree de propósito.
+Trabalha-se na `main` e commita-se na `main`. **Sem branch por tópico, sem PR,
+sem merge de aprovação.**
 
-Nunca `push --force`, nunca merge para `main` sem o PR aprovado.
+Isto mudou a 6 de Setembro de 2026, e a versão anterior desta secção mandava o
+contrário. A razão da mudança: quem mexe no repo é uma pessoa, e a revisão
+acontece na conversa — página a página, com o resultado à vista. Um PR seria
+uma segunda revisão do que já foi aprovado a olho.
+
+O que **não** mudou:
+
+- Nada de worktrees. O `.claude/settings.json` desliga o isolamento por
+  worktree de propósito.
+- Nunca `push --force`.
+- **Perguntar antes de fazer push.** Commitar é local; o push sai da máquina
+  para um repositório partilhado, e esse passo confirma-se.
+- Um commit por tópico. O que caiu foi o branch e o PR, não a granularidade —
+  a mensagem de commit continua a ser onde o porquê fica escrito.
 
 ## Antes de dizer que está pronto
 
