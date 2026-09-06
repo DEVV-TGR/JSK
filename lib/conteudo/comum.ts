@@ -135,14 +135,27 @@ export const RODAPE = {
   contactos: { titulo: "Contactos" },
 
   /**
-   * ⚠️ O rodapé antigo assina `Design by XquisiteVision`.
+   * A assinatura.
    *
-   * Não passa para aqui, e a razão não é preferência: o desenho deste site não
-   * é o dela. Pôr o crédito seria uma afirmação falsa; pôr outro nome no lugar
-   * seria uma decisão que não é minha. Fica de fora até alguém dizer o que lá
-   * deve estar — ver `docs/decisoes-pendentes.md`, ponto 2.
+   * O rodapé antigo assina `Design by XquisiteVision`, e durante todo o
+   * arranque deste projecto ficou de fora: o desenho deste site não é o dela,
+   * pôr o crédito era uma afirmação falsa, e pôr outro nome no lugar era uma
+   * decisão que não me competia. Era o ponto 2 do
+   * `docs/decisoes-pendentes.md`.
+   *
+   * Respondido pelo Gonçalo a 6 de Setembro de 2026: **é a DevPlus**, e
+   * substitui a XquisiteVision no site inteiro — aqui, no cartão da homepage
+   * e na `/web/`.
+   *
+   * O `rel` não é opcional num link externo que abre noutro separador — é o
+   * defeito #34, que na `/web/` aparece duas vezes.
    */
   copyright: `Copyright © ${new Date().getFullYear()} JSK`,
+
+  assinatura: {
+    texto: "Design by DevPlus",
+    href: "https://devplus.pt",
+  },
 } as const;
 
 /**

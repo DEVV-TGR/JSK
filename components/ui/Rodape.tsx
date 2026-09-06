@@ -68,8 +68,24 @@ export function Rodape() {
           />
         </div>
 
-        <div className="border-betao text-grafite mt-16 border-t pt-8 text-[0.8125rem]">
+        <div className="border-betao text-grafite mt-16 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t pt-8 text-[0.8125rem]">
           <p>{RODAPE.copyright}</p>
+
+          {/* A assinatura de quem desenhou o site. Esteve fora até haver
+              resposta ao ponto 2 das decisões pendentes — ver a nota em
+              `lib/conteudo/comum.ts`.
+
+              `rel="noopener noreferrer"` porque abre noutro separador: sem ele,
+              a página de destino fica com uma referência à nossa em
+              `window.opener`. É o defeito #34. */}
+          <a
+            href={RODAPE.assinatura.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-amarelo [transition:color_160ms_ease]"
+          >
+            {RODAPE.assinatura.texto}
+          </a>
         </div>
       </Medida>
     </footer>

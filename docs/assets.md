@@ -57,6 +57,28 @@ nome do ficheiro aparece no URL da imagem, e o URL é público.
 O mapa de `origem → destino` vive no script, o que faz dele também o registo de
 que nome é que veio de onde.
 
+## As capturas da `/web/`
+
+Três ficheiros em `public/web/` não vêm de jsk.pt e por isso **não estão na
+lista do `importar-assets.mjs`**: são capturas dos sites que a DevPlus fez,
+tiradas do browser a 1440×900 com autorização do Gonçalo, a 6 de Setembro de
+2026.
+
+```
+taskuinha-do-pirata.webp    de taskuinhapirata.pt
+imperio-auto-concept.webp   de imperioautoconcept.com
+antonio-home-repair.webp    de antoniohomerepairservices.pt
+```
+
+Recortadas ao centro para 16:10 — que é o rácio do cartão, o que deixa o
+`object-cover` sem nada para cortar — e gravadas a 1200px em WebP 82. As três
+somam 132 KB.
+
+**Três dos seis trabalhos não têm captura**, e é de propósito: a Mira Mar e A
+Barraquinha Nova não têm site público a que o portefólio aponte, e o da JSK
+apontaria para o WordPress que este projecto está a substituir. Ficam em cartão
+tipográfico com a grelha de desenho — não se inventa uma imagem para encher.
+
 ## O `alt` não se gera
 
 O site antigo deriva o texto alternativo do nome do ficheiro: `camera preta`,

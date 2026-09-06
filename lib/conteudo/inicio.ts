@@ -86,16 +86,18 @@ export const CARTOES = [
   },
   {
     /**
-     * ⚠️ O texto original credita a XquisiteVision, mas a página `/web/`
-     * credita a DevPlus. É a mesma empresa em dois sítios do mesmo site.
-     * A frase fica **exactamente como está no site actual** até alguém dizer
-     * qual é a certa — ver `docs/decisoes-pendentes.md`, ponto 2.
+     * O site actual credita aqui a **XquisiteVision** e na `/web/` a
+     * **DevPlus** — a contradição que era o ponto 2 do
+     * `docs/decisoes-pendentes.md`.
+     *
+     * Respondido pelo Gonçalo a 6 de Setembro de 2026: é a **DevPlus**, e em
+     * todo o lado. Esta é a única palavra mudada na frase; o resto é verbatim.
      */
     nome: "JSK Web",
     href: "/web/",
     icone: "web",
     texto:
-      "Websites modernos e funcionais, desenvolvidos pela XquisiteVision e promovidos pela JSK, para garantir a sua marca com impacto online.",
+      "Websites modernos e funcionais, desenvolvidos pela DevPlus e promovidos pela JSK, para garantir a sua marca com impacto online.",
   },
 ] as const satisfies readonly {
   nome: string;

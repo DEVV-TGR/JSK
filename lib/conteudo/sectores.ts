@@ -54,15 +54,15 @@ export const SECTORES_DETALHE = [
   },
   {
     /**
-     * ⚠️ O texto credita a XquisiteVision; a página `/web/` credita a DevPlus.
-     * Fica exactamente como está no site actual até alguém dizer qual é a
-     * certa — `docs/decisoes-pendentes.md`, ponto 2.
+     * O site actual credita aqui a **XquisiteVision** e na `/web/` a
+     * **DevPlus**. Respondido pelo Gonçalo a 6 de Setembro de 2026: é a
+     * **DevPlus**, e em todo o lado. Única palavra mudada na frase.
      */
     nome: "JSK Web",
     href: "/web/",
     icone: "web",
     texto:
-      "Websites modernos e funcionais, desenvolvidos pela XquisiteVision e promovidos pela JSK, para garantir a sua marca com impacto online.",
+      "Websites modernos e funcionais, desenvolvidos pela DevPlus e promovidos pela JSK, para garantir a sua marca com impacto online.",
     servicos: ["Web Design", "Foco em Resultados", "Identidade Visual"],
   },
 ] as const satisfies readonly {

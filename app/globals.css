@@ -233,6 +233,28 @@ p {
       );
   }
 
+  /* ── A grelha de desenho ─────────────────────────────────────────────────
+     O papel milimétrico em que um site se desenha antes de existir. Serve o
+     herói da `/web/` e a moldura da cena que a constrói, e é por isso que a
+     cor e o passo vêm de fora, em `--linha` e `--passo`: a mesma grelha tem de
+     assentar sobre asfalto e sobre betão, a escalas diferentes.
+
+     Dois degradês e nenhuma imagem. Uma textura em ficheiro seria um pedido a
+     mais e um asset a manter, para desenhar duas linhas. */
+  .grelha-desenho {
+    background-image:
+      repeating-linear-gradient(
+        to right,
+        var(--linha) 0 1px,
+        transparent 1px var(--passo)
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        var(--linha) 0 1px,
+        transparent 1px var(--passo)
+      );
+  }
+
   /* ── A banda de perigo ───────────────────────────────────────────────────
      O corte entre cenas. Três pixels de diagonal amarela e preta, que é o
      que separa um terreno do seguinte sem haver interpolação nenhuma. */

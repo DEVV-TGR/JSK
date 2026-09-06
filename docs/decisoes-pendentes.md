@@ -43,6 +43,22 @@ a **XquisiteVision** (`xquisitevision.pt`), que também assina o desenho do site
 Parece uma mudança de parceiro aplicada ao `/web/` (última alteração em Agosto
 de 2026) e nunca propagada à homepage nem ao rodapé — mas parecer não chega.
 
+**Respondido a 6 de Setembro de 2026: é a DevPlus, e em todo o lado.**
+
+Aplicado nos três sítios onde o nome aparecia ou faltava:
+
+- `lib/conteudo/inicio.ts` e `lib/conteudo/sectores.ts` — o cartão da homepage
+  passa a dizer `desenvolvidos pela DevPlus`. É a única palavra mudada na
+  frase; o resto continua verbatim.
+- `lib/conteudo/comum.ts` — o rodapé ganha `Design by DevPlus`, com ligação a
+  devplus.pt. Até aqui a assinatura estava **fora** de propósito: pôr o crédito
+  da XquisiteVision era uma afirmação falsa, e pôr outro nome era uma decisão
+  que não me competia.
+- A `/web/` inteira, que passa a ser a página da DevPlus dentro do site do
+  cliente.
+
+Com isto a `/web/` deixa de estar travada, e foi construída na mesma ronda.
+
 ---
 
 ## 3. NIF e denominação social — em falta

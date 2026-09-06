@@ -250,6 +250,93 @@
       animation-range: entry 10% entry calc(50% + var(--i, 0) * 12%);
     }
 
+    /* ── O site que se constrói ──────────────────────────────────────────
+       O pico da `/web/`. Uma moldura de página que se faz em quatro fases,
+       pela ordem por que um site se faz a sério:
+
+         contain  0 → 20%   a grelha aparece
+         contain 20 → 58%   os blocos assentam, escalonados
+         contain 50 → 84%   os blocos preenchem-se: a tipografia
+         contain 84 → 96%   o amarelo acende: a marca
+
+       As fases 2 e 3 sobrepõem-se de propósito. Um site não espera que todos
+       os blocos estejam postos para começar a ganhar texto — e uma cena onde
+       cada fase espera pela anterior lê-se como uma barra de progresso.
+
+       **Nenhum fotograma novo, e nenhum estado de repouso declarado.** Tudo
+       reaproveita o `acorda` (a grelha e o amarelo), o `entra` (os blocos a
+       assentar) e o `revela` (o preenchimento). Os três acabam exactamente no
+       estado natural do elemento — opacidade cheia, sem transformação, sem
+       recorte — por isso um browser sem `animation-timeline` serve o site
+       desenhado e completo sem uma linha de CSS a dizê-lo. É o melhor caso
+       possível da regra que não se quebra: ela cumpre-se sozinha.
+
+       Abaixo de `lg` a cena não é fixa. Uma moldura de página inteira com a
+       coluna das fases ao lado não cabe num telemóvel, e uma cena fixa que não
+       cabe corta o que lá está — a mesma saída do `.painel` da `/alarmes/`. */
+    .constroi-grelha {
+      animation: acorda linear both;
+      animation-timeline: view();
+      animation-range: entry 20% entry 70%;
+    }
+
+    @media (min-width: 64rem) {
+      .constroi {
+        view-timeline: --constroi block;
+      }
+
+      .constroi-grelha {
+        animation-timeline: --constroi;
+        animation-range: contain 0% contain 20%;
+      }
+
+      .constroi-bloco {
+        animation: entra linear both;
+        animation-timeline: --constroi;
+        animation-range: contain calc(20% + var(--i, 0) * 4%) contain
+          calc(38% + var(--i, 0) * 4%);
+      }
+
+      .constroi-cheio {
+        animation: revela linear both;
+        animation-timeline: --constroi;
+        animation-range: contain calc(50% + var(--i, 0) * 4%) contain
+          calc(64% + var(--i, 0) * 4%);
+      }
+
+      /* O amarelo limpa-se, e **não** se acende com o `acorda`.
+         O `acorda` parte de 0.25 de opacidade, e amarelo a 25% sobre asfalto
+         dá um verde-azeitona bem visível: a última fase deixava de ser uma
+         fase, porque a marca já lá estava desde o princípio. O `revela` parte
+         de recorte total — antes da fase não há nada — e acaba no estado
+         natural do elemento, que é o que a regra do repouso exige. */
+      .constroi-marca {
+        animation: revela linear both;
+        animation-timeline: --constroi;
+        animation-range: contain 84% contain 96%;
+      }
+
+      /* Cada fase acende quando a sua parte da moldura acontece. Os 27% de
+         passo são o que distribui as quatro por todo o percurso: a primeira
+         aos 2%, a última a fechar aos 95% — ainda com a cena à vista, que é o
+         que um `cover` nunca garantiria. */
+      .constroi-fase {
+        animation: acorda linear both;
+        animation-timeline: --constroi;
+        animation-range: contain calc(2% + var(--i, 0) * 27%) contain
+          calc(14% + var(--i, 0) * 27%);
+      }
+    }
+
+    /* Empilhada, a lista de fases entra como qualquer outra lista do site. */
+    @media (max-width: 63.999rem) {
+      .constroi-fase {
+        animation: entra linear both;
+        animation-timeline: view();
+        animation-range: entry 5% entry calc(45% + var(--i, 0) * 8%);
+      }
+    }
+
     /* ── A cena que troca de opção ───────────────────────────────────────
        O `Comprar vs alugar`. A secção encosta ao ecrã e o conteúdo troca com
        o scroll: primeiro o `Comprar` em cheio sobre asfalto, depois o corte, e
