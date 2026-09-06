@@ -250,54 +250,63 @@
       animation-range: entry 10% entry calc(50% + var(--i, 0) * 12%);
     }
 
-    /* ── O terreno que chega ─────────────────────────────────────────────
-       A metade escura do `Comprar vs alugar` entra por um `clip-path` da
-       esquerda para a direita: o lado do `Comprar` toma o seu chão à frente de
-       quem desce.
+    /* ── A cena que troca de opção ───────────────────────────────────────
+       O `Comprar vs alugar`. A secção encosta ao ecrã e o conteúdo troca com
+       o scroll: primeiro o `Comprar` em cheio sobre asfalto, depois o corte, e
+       o `Alugar` em cheio sobre papel.
 
-       **O intervalo fecha aos 40% da entrada, e não aos 85% como o `.revela`.**
-       Não é afinação de gosto: o texto daquele lado é `papel` sobre `asfalto`,
-       ou seja branco, e enquanto o terreno não chega está branco sobre branco.
-       Com o intervalo do `.revela` via-se um lado legível e um rectângulo preto
-       a crescer no outro durante meio ecrã de scroll — lia-se como avaria.
-       Fechando cedo, o chão está posto muito antes de os títulos entrarem, e o
-       que se vê é o corte a acontecer, não o conteúdo a faltar. */
-    .terreno {
-      animation: revela linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 40%;
+       **O corte é rápido de propósito.** A gramática deste site diz corte
+       duro, nunca interpolação — por isso cada opção fica parada quase metade
+       do percurso e a troca acontece em 18%, decidida. Uma limpeza lenta lia-se
+       como dissolução, que é exactamente o que a gramática proíbe.
+
+         contain  0 → 40%   o Comprar, parado
+         contain 40 → 58%   o corte
+         contain 58 → 100%  o Alugar, parado
+
+       **Abaixo de `lg` a cena não é fixa, e os painéis não se sobrepõem.**
+       Estão um a seguir ao outro no fluxo normal, cada um com o seu terreno de
+       bordo a bordo — que é também o que um browser sem `animation-timeline`
+       serve, e o que quem pediu menos movimento recebe. Duas opções empilhadas
+       e legíveis é o estado final desta cena; dois painéis sobrepostos com um
+       a tapar o outro nunca poderia ser. É a mesma saída do `.painel` da
+       `/alarmes/`, e pela mesma razão. */
+    @media (min-width: 64rem) {
+      .troca {
+        view-timeline: --troca block;
+        height: 250svh;
+      }
+
+      .troca-cena {
+        position: sticky;
+        top: 4.5rem;
+        height: calc(100svh - 4.5rem);
+        overflow: hidden;
+      }
+
+      .troca-painel {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* O segundo painel limpa-se por cima do primeiro. Reaproveita o `revela`
+         — o mesmo `clip-path` da esquerda para a direita que limpa as
+         fotografias da galeria. Aqui não limpa uma imagem: corta uma cena. */
+      .troca-corte {
+        animation: revela linear both;
+        animation-timeline: --troca;
+        animation-range: contain 40% contain 58%;
+      }
     }
 
-    /* ── A comparação que converge ───────────────────────────────────────
-       O dispositivo do `Comprar vs alugar`. Cada linha limpa-se **na direcção
-       do eixo**: a coluna da esquerda da esquerda para a direita, a da direita
-       da direita para a esquerda. As duas fecham sobre a chapa do meio.
-
-       Não é o `.revela` com outro nome. O `.revela` tem um intervalo fixo
-       porque limpa uma fotografia inteira de uma vez; aqui são treze linhas
-       curtas e o que faz o bloco ler-se como uma comparação — e não como
-       treze entradas soltas — é o escalonamento por `--i`.
-
-       Longhands em vez do atalho `animation`, e de propósito: o atalho
-       reinicia `animation-timeline` e `animation-range` para o valor inicial,
-       e escrito depois deles apaga-os em silêncio. É a armadilha que já mordeu
-       na câmara e no andaime.
-
-       Abaixo dos 640px as duas colunas empilham-se e deixa de haver eixo ao
-       centro para onde convergir — aí limpam as duas para o mesmo lado, como
-       qualquer outra lista do site. */
-    .compara,
-    .compara-espelho {
-      animation-name: revela;
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: view();
-      animation-range: entry 10% entry calc(48% + var(--i, 0) * 7%);
-    }
-
-    @media (min-width: 40rem) {
-      .compara-espelho {
-        animation-name: revela-espelho;
+    /* Empilhados, cada item entra pela sua própria posição, como qualquer
+       outra lista do site. Fixa, a cena não leva entradas: o corte é o gesto,
+       e escalonar por cima dele era mostrar duas coisas ao mesmo tempo. */
+    @media (max-width: 63.999rem) {
+      .troca-item {
+        animation: entra linear both;
+        animation-timeline: view();
+        animation-range: entry 5% entry calc(45% + var(--i, 0) * 8%);
       }
     }
 
@@ -602,19 +611,6 @@
 @keyframes revela {
   from {
     clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-/* A limpeza ao contrário, da direita para a esquerda. Existe por causa da
-   coluna direita do `Comprar vs alugar`: com o `revela` normal as duas colunas
-   limpavam para o mesmo lado e o bloco lia-se como duas listas lado a lado, em
-   vez de dois lados a fechar sobre o mesmo eixo. */
-@keyframes revela-espelho {
-  from {
-    clip-path: inset(0 0 0 100%);
   }
   to {
     clip-path: inset(0 0 0 0);

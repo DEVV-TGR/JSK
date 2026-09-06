@@ -5,145 +5,114 @@ import { COMPARACAO } from "@/lib/conteudo/screens";
 type Opcao = (typeof COMPARACAO.opcoes)[number];
 
 /**
- * Comprar vs alugar — a cena partida em dois terrenos.
+ * Comprar vs alugar — a cena que troca de opção.
  *
- * Este bloco já foi duas coisas erradas antes desta. Fica escrito porque o
- * terceiro desenho só se percebe contra os dois primeiros:
+ * A secção encosta ao ecrã e o conteúdo troca com o scroll: primeiro o
+ * `Comprar` em cheio sobre asfalto, depois o corte, e o `Alugar` em cheio
+ * sobre papel. Uma opção de cada vez, ao tamanho todo.
  *
- * 1. **Duas caixas gémeas lado a lado.** Duas caixas iguais não se comparam,
- *    lêem-se uma a seguir à outra.
- * 2. **Um eixo ao centro, tudo em `papel`.** Melhor de ideia e pior de facto:
- *    o conjunto ficou centrado a 54rem enquanto o título e a entrada ficaram
- *    encostados à esquerda numa coluna estreita — duas margens diferentes na
- *    mesma secção — e o lado esquerdo, alinhado ao eixo, deixava um vazio
- *    branco enorme. Num site que é todo terrenos, chapas e cortes duros, um
- *    bloco branco e fino não pertence.
+ * O corte é rápido de propósito — cada opção fica parada quase metade do
+ * percurso e a troca acontece em 18%. A gramática deste site diz corte duro,
+ * nunca interpolação, e uma limpeza lenta lia-se como dissolução.
  *
- * **O que estava errado nos dois: um terreno só.** A gramática deste site diz
- * que cada cena assenta no seu terreno e que entre terrenos há corte, nunca
- * interpolação. Duas opções que se confrontam são duas cenas, não uma. Por
- * isso a metade do `Comprar` é asfalto e a do `Alugar` é papel, de bordo a
- * bordo, e o corte ao meio é a linha divisória — não é preciso desenhar
- * nenhuma. A chapa `VS` senta-se em cima dele.
+ * **É a segunda cena fixa da página, e isso é uma decisão do Gonçalo tomada
+ * com o risco em cima da mesa.** A parede que se monta, imediatamente antes,
+ * já encosta ao ecrã durante 300svh. Duas cenas fixas seguidas costumam fazer
+ * a página lutar com quem desce — se um dia a `/screens-led/` parecer pesada a
+ * meio, é aqui que se mexe, e a saída é esta cena deixar de ser fixa.
  *
- * Dois gestos de scroll, e o primeiro é o novo:
- *
- * - **O terreno chega.** A metade escura entra por um `clip-path` da esquerda
- *   para a direita: a cena começa toda clara e o lado do `Comprar` toma o seu
- *   chão. É o corte a acontecer à frente de quem desce.
- * - **As linhas convergem.** Cada uma limpa-se na direcção do corte, com o
- *   `--i` a correr de cima a baixo em cada coluna e a atravessar as vantagens
- *   e as desvantagens — é uma coluna a ser lida, não dois grupos.
- *
- * **Não é cena fixa, de propósito:** a parede que se monta, logo antes, já
- * encosta ao ecrã durante 300svh, e dois `pin` seguidos põem a página a lutar
- * com quem desce.
+ * **Abaixo de `lg` os dois painéis não se sobrepõem:** ficam um a seguir ao
+ * outro no fluxo normal, cada um com o seu terreno de bordo a bordo. É também
+ * o que um browser sem `animation-timeline` serve e o que quem pediu menos
+ * movimento recebe — porque duas opções empilhadas e legíveis é o estado final
+ * desta cena, e dois painéis sobrepostos com um a tapar o outro nunca poderia
+ * ser. Mesma saída do `.painel` da `/alarmes/`, e pela mesma razão.
  *
  * **Aqui corrige-se o defeito #9.** No site actual as desvantagens abrem com o
  * mesmo `✔️` verde das vantagens, o que faz uma lista de contras ler-se como
- * uma lista de prós. Passam ao ícone `errado`. A cor de cada lado é a que o
- * terreno pede — `grafite` sobre asfalto dá 5,7:1, `chumbo` sobre papel dá
- * 7,2:1 — e nenhuma delas é vermelha: a paleta tem seis valores e nenhum é
- * esse.
+ * uma lista de prós. Passam ao ícone `errado`, na cor que cada terreno pede —
+ * `grafite` sobre asfalto dá 5,7:1, `chumbo` sobre papel dá 7,2:1 — e nenhuma
+ * é vermelha: a paleta tem seis valores e nenhum é esse.
  */
 export function ComprarOuAlugar() {
   const [comprar, alugar] = COMPARACAO.opcoes;
 
   return (
-    <Seccao terreno="papel" fundo={false}>
-      <Medida>
-        <h2 className="text-cena font-titulo max-w-[16ch] font-extrabold">
-          {COMPARACAO.titulo}
-        </h2>
-
-        {/* A entrada ocupa a largura toda, em duas colunas. Numa coluna só
-            ficava um parágrafo estreito com meia página vazia ao lado; numa
-            linha só ficavam cem caracteres, que ninguém lê. Duas colunas de
-            uns sessenta são a medida certa e enchem a `Medida`. */}
-        <p className="text-guia text-chumbo mt-8 sm:columns-2 sm:gap-14">
-          {COMPARACAO.intro}
-        </p>
-      </Medida>
-
-      <div className="relative isolate mt-[var(--espaco-cena)]">
-        {/* O terreno do `Comprar`, de bordo a bordo. Está em absoluto e não no
-            fluxo porque tem de sangrar para fora da `Medida` até à aresta do
-            ecrã — é meia cena, não meio cartão.
-
-            Abaixo dos 640px as colunas empilham-se e não há metades: aí o
-            terreno vai no próprio `<section>` do lado, e este desaparece. */}
-        <div
-          className="terreno bg-asfalto absolute inset-y-0 start-0 -z-10 hidden w-1/2 sm:block"
-          aria-hidden="true"
-        />
-
+    <>
+      <Seccao terreno="papel">
         <Medida>
-          <div className="grid sm:grid-cols-2">
-            <Lado opcao={comprar} espelho />
-            <Lado opcao={alugar} />
-          </div>
-        </Medida>
+          <h2 className="text-cena font-titulo max-w-[16ch] font-extrabold">
+            {COMPARACAO.titulo}
+          </h2>
 
-        {/* A chapa senta-se em cima do corte. Não precisa de linha por baixo:
-            a linha é o sítio onde os dois terrenos se encostam. */}
-        <span
-          className="chapa font-titulo absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 px-3.5 py-2.5 text-[0.8125rem] font-bold tracking-[0.12em] sm:block"
-          aria-hidden="true"
-        >
-          VS
-        </span>
+          {/* A entrada ocupa a largura toda, em duas colunas. Numa coluna só
+              ficava um parágrafo estreito com meia página vazia ao lado; numa
+              linha só ficavam cem caracteres, que ninguém lê. */}
+          <p className="text-guia text-chumbo mt-8 sm:columns-2 sm:gap-14">
+            {COMPARACAO.intro}
+          </p>
+        </Medida>
+      </Seccao>
+
+      {/* O fundo do contentor é o do primeiro painel: é o que se vê se a cena
+          encostada alguma vez deixar uma aresta à mostra. */}
+      <div className="troca bg-asfalto">
+        <div className="troca-cena">
+          <Painel opcao={comprar} escuro />
+          <Painel opcao={alugar} corte />
+        </div>
       </div>
-    </Seccao>
+    </>
   );
 }
 
-/**
- * Um dos lados.
- *
- * O `espelho` governa quatro coisas ao mesmo tempo — o terreno, o alinhamento,
- * o lado do ícone e para onde a linha se limpa — porque são a mesma decisão:
- * este é o lado escuro, virado para o corte, ou o claro.
- *
- * O `--i` corre de um grupo para o outro (`inicio`), o que faz a coluna
- * cascatear de cima a baixo em vez de recomeçar nas desvantagens.
- */
-function Lado({ opcao, espelho = false }: { opcao: Opcao; espelho?: boolean }) {
+function Painel({
+  opcao,
+  escuro = false,
+  corte = false,
+}: {
+  opcao: Opcao;
+  escuro?: boolean;
+  /** O painel que se limpa por cima do outro. Só o segundo o leva. */
+  corte?: boolean;
+}) {
   return (
-    <section
-      className={
-        espelho
-          ? "bg-asfalto text-papel px-6 py-14 sm:bg-transparent sm:pe-14 sm:ps-0 sm:text-end sm:py-[var(--espaco-cena)]"
-          : "text-asfalto px-6 py-14 sm:ps-14 sm:pe-0 sm:py-[var(--espaco-cena)]"
-      }
+    <article
+      /* O `py` fica em todas as larguras, e **não** desligado num `lg:`.
+         A primeira versão levava `lg:py-0` a contar com a cena fixa a centrar
+         o conteúdo — mas o `lg:` é largura de ecrã e a cena fixa vive dentro
+         de um `@supports`. Num ecrã largo sem `animation-timeline` os painéis
+         empilham-se em fluxo **e** ficavam sem respiro: o último item do
+         `Comprar` colado ao corte. Fixa, este espaçamento não custa nada — o
+         conteúdo mais alto são uns 390px numa cena de 828. */
+      className={`troca-painel ${corte ? "troca-corte" : ""} flex items-center py-[var(--espaco-cena)] ${
+        escuro ? "bg-asfalto text-papel" : "bg-papel text-asfalto"
+      }`}
     >
-      <h3 className="text-bloco font-titulo font-extrabold">{opcao.titulo}</h3>
-      <span
-        className={`bg-amarelo mt-4 block h-1.5 w-20 ${espelho ? "sm:ms-auto" : ""}`}
-        aria-hidden="true"
-      />
+      <Medida className="w-full">
+        <h3 className="text-cena font-titulo font-extrabold">{opcao.titulo}</h3>
+        <span className="bg-amarelo mt-5 block h-1.5 w-24" aria-hidden="true" />
 
-      <Grupo
-        cabecalho="Vantagens"
-        itens={opcao.vantagens}
-        icone="certo"
-        cor="text-amarelo"
-        corCabecalho={espelho ? "text-grafite" : "text-chumbo"}
-        espelho={espelho}
-        inicio={0}
-      />
-      <Grupo
-        cabecalho="Desvantagens"
-        itens={opcao.desvantagens}
-        icone="errado"
-        /* A cor do contra é a que cada terreno pede: `grafite` lê-se sobre
-           asfalto a 5,7:1, `chumbo` lê-se sobre papel a 7,2:1. Trocá-las
-           reprovava as duas. */
-        cor={espelho ? "text-grafite" : "text-chumbo"}
-        corCabecalho={espelho ? "text-grafite" : "text-chumbo"}
-        espelho={espelho}
-        inicio={opcao.vantagens.length}
-      />
-    </section>
+        <Grupo
+          cabecalho="Vantagens"
+          itens={opcao.vantagens}
+          icone="certo"
+          cor="text-amarelo"
+          corCabecalho={escuro ? "text-grafite" : "text-chumbo"}
+          inicio={0}
+        />
+        <Grupo
+          cabecalho="Desvantagens"
+          itens={opcao.desvantagens}
+          icone="errado"
+          /* A cor do contra é a que o terreno pede. Trocá-las reprovava as
+             duas. */
+          cor={escuro ? "text-grafite" : "text-chumbo"}
+          corCabecalho={escuro ? "text-grafite" : "text-chumbo"}
+          inicio={opcao.vantagens.length}
+        />
+      </Medida>
+    </article>
   );
 }
 
@@ -153,7 +122,6 @@ function Grupo({
   icone,
   cor,
   corCabecalho,
-  espelho,
   inicio,
 }: {
   cabecalho: string;
@@ -161,33 +129,31 @@ function Grupo({
   icone: "certo" | "errado";
   cor: string;
   corCabecalho: string;
-  espelho: boolean;
   inicio: number;
 }) {
   return (
-    <div className="mt-12">
+    <div className="mt-10 lg:mt-12">
       <p
         className={`${corCabecalho} font-titulo text-[0.75rem] font-bold tracking-[0.14em] uppercase`}
       >
         {cabecalho}
       </p>
 
-      <ul className="mt-4">
+      {/* Em duas colunas, e não numa lista alta e estreita: com um ecrã
+          inteiro por opção, uma coluna só deixava metade da largura vazia. */}
+      <ul className="mt-5 grid gap-x-14 gap-y-3.5 sm:grid-cols-2">
         {itens.map((item, indice) => (
           <li
             key={item}
-            className={`${
-              espelho ? "compara-espelho sm:flex-row-reverse" : "compara"
-            } flex items-baseline gap-3.5 py-2 text-[1.125rem] leading-snug`}
+            className="troca-item flex items-baseline gap-3.5 text-[1.125rem] leading-snug lg:text-[1.25rem]"
             style={{ "--i": inicio + indice } as React.CSSProperties}
           >
             <Icone
               nome={icone}
               className={`${cor} size-[1.125rem] shrink-0 translate-y-0.5 stroke-[2.5]`}
             />
-            {/* O texto vai num `<span>` e não solto: um nó de texto nu vira um
-                item de flex anónimo, e o `flex-row-reverse` do lado espelhado
-                não o reordena de forma fiável. */}
+            {/* O texto vai num `<span>` e não solto, para o `items-baseline`
+                alinhar o ícone pela primeira linha e não pela caixa toda. */}
             <span>{item}</span>
           </li>
         ))}

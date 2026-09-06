@@ -27,14 +27,16 @@ export const metadata: Metadata = {
 /**
  * A `/screens-led/`, em seis cenas mais a chapa.
  *
- * A sequência de terrenos é asfalto → papel → betão → **papel partido** →
- * asfalto → betão → amarelo.
+ * A sequência de terrenos é asfalto → papel → betão → papel → **asfalto e
+ * papel** → asfalto → betão → amarelo.
  *
- * A quarta cena é a única do site que tem dois terrenos ao mesmo tempo: o
- * `Comprar vs alugar` corta-se ao meio, asfalto de um lado e papel do outro,
- * porque duas opções que se confrontam são duas cenas e não uma. A metade
- * escura encosta ao asfalto da cena seguinte, e daí a primeira banda de
- * perigo. A segunda separa as aplicações do processo. A terceira é a que a
+ * A quinta cena conta por duas: o `Comprar vs alugar` é uma cena fixa que
+ * troca de opção a meio, e cada opção traz o seu terreno — asfalto no
+ * `Comprar`, papel no `Alugar`. Sai a mostrar papel, o que faz o corte para o
+ * asfalto das aplicações ver-se sozinho.
+ *
+ * A única banda de perigo da página separa as aplicações do processo, que são
+ * os dois únicos terrenos escuros encostados. A segunda é a que a
  * `BandaOrcamento` traz consigo, e essa marca o fim — não separa dois escuros.
  *
  * O pico é a cena 3, a parede que se monta, e é a única fixa. A cena 2 é a
@@ -58,7 +60,6 @@ export default function Screens() {
       <IntroScreens />
       <ParedeQueMonta />
       <ComprarOuAlugar />
-      <div className="banda-perigo" aria-hidden="true" />
       <AplicacoesScreens />
       <div className="banda-perigo" aria-hidden="true" />
       <Processo />
