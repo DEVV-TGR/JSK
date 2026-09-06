@@ -250,6 +250,24 @@
       animation-range: entry 10% entry calc(50% + var(--i, 0) * 12%);
     }
 
+    /* ── O terreno que chega ─────────────────────────────────────────────
+       A metade escura do `Comprar vs alugar` entra por um `clip-path` da
+       esquerda para a direita: o lado do `Comprar` toma o seu chão à frente de
+       quem desce.
+
+       **O intervalo fecha aos 40% da entrada, e não aos 85% como o `.revela`.**
+       Não é afinação de gosto: o texto daquele lado é `papel` sobre `asfalto`,
+       ou seja branco, e enquanto o terreno não chega está branco sobre branco.
+       Com o intervalo do `.revela` via-se um lado legível e um rectângulo preto
+       a crescer no outro durante meio ecrã de scroll — lia-se como avaria.
+       Fechando cedo, o chão está posto muito antes de os títulos entrarem, e o
+       que se vê é o corte a acontecer, não o conteúdo a faltar. */
+    .terreno {
+      animation: revela linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+
     /* ── A comparação que converge ───────────────────────────────────────
        O dispositivo do `Comprar vs alugar`. Cada linha limpa-se **na direcção
        do eixo**: a coluna da esquerda da esquerda para a direita, a da direita
