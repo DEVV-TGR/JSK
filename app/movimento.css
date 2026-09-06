@@ -251,28 +251,70 @@
     }
 
     /* ── Os serviços que armam ───────────────────────────────────────────
-       O dispositivo das zonas do `PainelQueArma`, aplicado aos seis serviços
-       da `/web/`: o LED acende ao lado de cada um e o texto limpa-se logo a
-       seguir.
+       O painel da `/alarmes/` **inteiro**, aplicado aos seis serviços da
+       `/web/`: o LED de cada um acende, o texto limpa-se a seguir, e no fim o
+       contorno amarelo dá a volta ao painel e fecha.
 
-       **Sem `pin`, e é a diferença que interessa.** Na `/alarmes/` isto vive
-       dentro de uma cena fixa; aqui não pode, porque o `SiteQueSeConstroi`
+       **Uma só linha temporal, a da secção.** É o que garante que o contorno
+       só parte depois de o último LED ter acendido — a ordem vem da posição no
+       scroll e não de temporizadores que se dessincronizam. Foi por isto que a
+       primeira versão estava a menos: tinha os LEDs pendurados na linha
+       temporal de cada item, o que dava seis relógios independentes e não
+       deixava lugar nenhum para um remate comum.
+
+       **Sem `pin`, e essa é a única diferença para a `/alarmes/`.** Lá o
+       painel é uma cena fixa; aqui não pode ser, porque o `SiteQueSeConstroi`
        encosta ao ecrã imediatamente antes e duas cenas fixas seguidas põem a
-       página a lutar com quem desce. Em vez da linha temporal da cena, cada
-       item pende da sua própria — mesmo gesto, sem o segundo encosto.
+       página a lutar com quem desce. O intervalo é `entry` em vez de
+       `contain`: mede a entrada da secção em vez do tempo em que está
+       encostada.
 
-       Zero fotogramas novos: o `acende` é o do LED do painel, o `revela` é o
-       das listas. */
+       Zero fotogramas novos: `acende` do LED, `revela` do texto, e
+       `fecha-horizontal` / `fecha-vertical` do contorno — os mesmos quatro que
+       a `/alarmes/` já usa. */
+    .servicos {
+      view-timeline: --servicos block;
+    }
+
     .servico-led {
       animation: acende linear both;
-      animation-timeline: view();
-      animation-range: entry 10% entry calc(40% + var(--i, 0) * 8%);
+      animation-timeline: --servicos;
+      animation-range: entry calc(18% + var(--i, 0) * 7%) entry
+        calc(30% + var(--i, 0) * 7%);
     }
 
     .servico-texto {
       animation: revela linear both;
-      animation-timeline: view();
-      animation-range: entry 16% entry calc(52% + var(--i, 0) * 8%);
+      animation-timeline: --servicos;
+      animation-range: entry calc(24% + var(--i, 0) * 7%) entry
+        calc(40% + var(--i, 0) * 7%);
+    }
+
+    /* O contorno fecha a seguir ao último serviço, lado a lado, no sentido dos
+       ponteiros do relógio. Quatro filetes em `scaleX`/`scaleY` e não um traço
+       SVG: um `pathLength` normalizado dava a volta ao rectângulo à mesma
+       velocidade em todos os lados, e num painel muito mais largo do que alto
+       isso lê-se como o traço a hesitar nos lados curtos. Assim cada lado leva
+       o tempo que o seu comprimento pede — nove por cento nos horizontais,
+       cinco nos verticais.
+
+       O último serviço acaba de armar aos 65%; o contorno parte aos 70% e
+       fecha aos 98%, com a secção ainda à vista. */
+    .servicos-contorno-h,
+    .servicos-contorno-v {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --servicos;
+      animation-range: entry calc(var(--de, 0) * 1%) entry
+        calc(var(--ate, 100) * 1%);
+    }
+
+    .servicos-contorno-h {
+      animation-name: fecha-horizontal;
+    }
+
+    .servicos-contorno-v {
+      animation-name: fecha-vertical;
     }
 
     /* ── O trilho dos trabalhos ──────────────────────────────────────────
