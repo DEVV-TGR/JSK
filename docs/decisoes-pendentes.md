@@ -1,6 +1,6 @@
 # Decisões pendentes
 
-Onze pontos do site actual que **não se podem resolver sem o cliente**. Estão
+Doze pontos do site actual que **não se podem resolver sem o cliente**. Estão
 aqui em vez de estarem resolvidos por conta própria, e é isso que o
 `CLAUDE.md` manda fazer.
 
@@ -167,3 +167,46 @@ partir do bitmap; (c) fica assim e assume-se a limitação por escrito.
 imagem gerada por IA — o ficheiro chama-se `ChatGPT-Image-10_08_2025-22_10_03.png`.
 É a primeira coisa que um visitante vê de uma empresa de segurança. Há
 fotografia real de uma instalação ou de uma obra?
+
+**Respondido a 6 de Setembro de 2026, para a `/screens-led/`.** A fotografia
+que o cliente serve no herói dessa página — `PHOTO-2025-03-21-16-07-21.webp` —
+é a montra da Panda Pet, a mesma loja da galeria da `/obras/`, vista da rua.
+Tem sinalética impressa: um letreiro corrido e vinis nas montras. **Não tem um
+ecrã LED.**
+
+Perguntou-se se ficava, se saía, ou se o herói passava a chapa de título sem
+fotografia. O Gonçalo decidiu **que fica**, com o argumento de que é trabalho
+real da JSK num espaço comercial — o primeiro item da lista de aplicações de
+interior — e de que as páginas irmãs abrem todas com fotografia.
+
+O `alt` foi escrito em conformidade: descreve o letreiro e os vinis, e não
+promete um ecrã que ali não aparece.
+
+---
+
+## 12. Fotografia e vídeo de screens — há um de cada
+
+**O que está lá:** para o sector inteiro existem três ficheiros, e só três.
+
+| Ficheiro | O que é |
+|---|---|
+| `PHOTO-2025-03-21-16-07-21.webp` | A montra da Panda Pet. Sinalética impressa, sem LED — ver o ponto 11 |
+| `JSK-Screens.png` | Fotografia de produto: três módulos de LED, um deles aberto pelas costas. 247×229, e não há maior |
+| `Video-WhatsApp-…_1e4c33cd.mp4` | Seis segundos e oito décimas de uma fita LED da JSK acesa de noite, com texto amarelo a correr |
+
+**Porque bloqueia:** não bloqueia a página, que já está construída à volta do
+que há — e é de propósito que o gesto assinatura seja desenhado em CSS, porque
+não depende de fotografia que não existe. Bloqueia a página **ser melhor**.
+
+Duas coisas concretas que fariam diferença, por ordem:
+
+1. **Fotografias de instalações LED reais** — uma fachada, uma feira, uma loja.
+   O contador da homepage afirma 9 projectos de screens concluídos; não há
+   imagem de nenhum deles. Com elas, a página ganha uma galeria, como as irmãs.
+2. **Um plano de vídeo filmado de propósito**, de frente e a encher o quadro.
+   O que existe é uma fita larga e baixa filmada de lado, num salão às escuras.
+   Toca dentro da parede da cena do pico e cumpre — mas o formato do ficheiro
+   é 16:9 e o do ecrã que ele mostra não é, e isso vê-se.
+
+Nada disto se resolve recortando o que há: um recorte é uma decisão de
+enquadramento sobre o trabalho de outra pessoa.

@@ -115,6 +115,33 @@
   transform: rotate(-22deg);
 }
 
+/* Os módulos da parede LED, na cena da `/screens-led/`. Nascem **montados e no
+   sítio**, ao contrário das pranchas do andaime, que nascem fora da moldura.
+
+   A diferença não é capricho: o estado final daquela cena é o andaime já
+   desmontado, e o estado final desta é a parede inteira. Sem linha temporal
+   vê-se um ecrã LED montado e aceso, com o vídeo a tocar — que é o que a
+   página quer dizer — e não trinta e dois módulos empilhados fora do quadro.
+
+   Só `transform`, sem opacidade, pela mesma razão que a prancha: um módulo que
+   se desvanece a meio do percurso lê-se como um fantasma, e o que se quer é
+   uma peça a ser encaixada. Quem o esconde é o `overflow-hidden` da moldura. */
+.parede-modulo {
+  transform: translate3d(0, 0, 0);
+}
+
+/* O vídeo dentro da parede nasce à vista, inteiro. É a mesma regra: o que se
+   vê sem suporte é o ecrã aceso. */
+.parede-luz {
+  clip-path: inset(0 0 0 0);
+}
+
+/* E o clarão nasce aceso, pela mesma razão. Os 16% são o que se lê como luz
+   derramada sem o amarelo passar a moldura por cima do terreno. */
+.parede-clarao {
+  opacity: 0.16;
+}
+
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     /* ── Entrada ─────────────────────────────────────────────────────────
@@ -282,6 +309,68 @@
       animation-timeline: --pista;
       animation-range: contain calc(var(--i, 0) * 29%) contain
         calc(var(--i, 0) * 29% + 9%);
+    }
+
+    /* ── A parede que se monta ───────────────────────────────────────────
+       O pico da `/screens-led/`. Trinta e dois módulos entram, encaixam em
+       grelha, a parede acende e o vídeo do cliente toca lá dentro.
+
+       Mesma mecânica da casa e do painel — uma linha temporal só, tudo lá
+       dentro pendurado nela — e forma diferente outra vez: aqui não se desenha
+       nem se acende por zonas, **monta-se**. É a verdade física do produto: um
+       ecrã LED de aluguer é feito de módulos aparafusados uns aos outros, e a
+       própria fotografia de produto do cliente mostra três deles.
+
+       Os módulos entram pelo lado, um lado por cada linha da grelha,
+       alternados — como se enfia uma fila de cada vez numa estrutura. O `--i`
+       de cada um conta a partir da aresta por onde entra, para que o mais
+       próximo chegue primeiro; é isso que dá a diagonal em vez de uma barra de
+       progresso da esquerda para a direita.
+
+       Os 900% são nove larguras de módulo numa grelha de oito colunas: garante
+       que qualquer módulo começa fora da moldura, seja qual for a coluna. É o
+       mesmo argumento dos 360px do andaime num `viewBox` de 300. */
+    .parede {
+      view-timeline: --parede block;
+    }
+
+    .parede-modulo {
+      animation: monta-modulo cubic-bezier(0.33, 0, 0.15, 1) both;
+      animation-timeline: --parede;
+      animation-range: contain calc(var(--i, 0) * 4%) contain
+        calc(var(--i, 0) * 4% + 22%);
+    }
+
+    /* O varrimento, a seguir ao último módulo encaixar. O `--i` máximo é 10
+       — sete de coluna mais três de linha — logo o último fecha aos 62%, e é
+       daí que a luz parte. Fecha aos 82%, com a cena ainda encostada: um
+       `cover 100%` nunca lá chegaria.
+
+       Reaproveita o `revela`, que é o mesmo `clip-path` da esquerda para a
+       direita que limpa as fotografias da galeria. Num ecrã LED esse gesto tem
+       outro nome e é literal: é o varrimento. */
+    .parede-luz {
+      animation: revela linear both;
+      animation-timeline: --parede;
+      animation-range: contain 62% contain 82%;
+    }
+
+    /* O clarão sobe com o varrimento e um pouco para lá dele: a luz de um
+       ecrã não chega ao valor final no mesmo instante em que o último píxel
+       acende. Curva com travagem, como o painel da `/alarmes/` — em linear
+       lê-se como um interruptor, e um ecrã grande não acende assim. */
+    .parede-clarao {
+      animation: acende-clarao cubic-bezier(0.33, 0, 0.15, 1) both;
+      animation-timeline: --parede;
+      animation-range: contain 62% contain 88%;
+    }
+
+    /* A linha de estado, só depois de a parede estar acesa — como o
+       `.casa-estado` só entra depois de o perímetro fechar. */
+    .parede-estado {
+      animation: entra linear both;
+      animation-timeline: --parede;
+      animation-range: contain 86% contain 98%;
     }
 
     /* ── A casa que se arma ──────────────────────────────────────────────
@@ -498,6 +587,19 @@
   }
 }
 
+/* O módulo a encaixar. Espelho do `desmonta`: aquele leva a peça para fora,
+   este trá-la para dentro. Também só `transform`, e também sem ressalto — num
+   movimento conduzido pelo scroll uma curva que volta para trás lê-se como o
+   site a resistir à mão de quem desce. */
+@keyframes monta-modulo {
+  from {
+    transform: translate3d(calc(var(--lado, 1) * 900%), 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 /* O chão que a luz já varreu, da esquerda para a direita. */
 @keyframes rasto {
   from {
@@ -570,6 +672,18 @@
   87%,
   100% {
     transform: translate3d(calc(var(--percurso, 0px) * -1), 0, 0);
+  }
+}
+
+/* O clarão. Não vai de 0 a 1 como o `acorda`: pára nos 16%, que é o valor de
+   repouso declarado lá em cima. Um fotograma que acabasse em 1 fazia o amarelo
+   saltar no instante em que a animação fecha. */
+@keyframes acende-clarao {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.16;
   }
 }
 

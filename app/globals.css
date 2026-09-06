@@ -171,6 +171,68 @@ p {
     top: calc(4.5rem + var(--i, 0) * 3.25rem);
   }
 
+  /* ── O módulo de LED ─────────────────────────────────────────────────────
+     A matriz de píxeis de que um ecrã LED é feito, à escala a que se vê de
+     perto. O ponto de 1px a cada 4px é o que dá a granulação do painel
+     apagado — e é a mesma coisa que se vê na fotografia de produto do cliente,
+     em `public/screens/modulos.webp`.
+
+     Não é uma imagem: são dois degradês. Trinta e dois módulos com uma textura
+     em ficheiro seriam trinta e dois pedidos, ou um sprite para manter. */
+  .modulo-led {
+    background-color: #232323;
+    background-image: radial-gradient(
+      circle at 50% 50%,
+      #383838 0 1px,
+      transparent 1px
+    );
+    background-size: 4px 4px;
+    /* A aresta do próprio módulo, e não uma grelha desenhada por cima: é ela
+       que faz a junta aparecer **à medida que** cada peça encaixa. Sem isto os
+       módulos que já chegaram fundiam-se num bloco só e a montagem deixava de
+       se ler. */
+    box-shadow: inset 0 0 0 1px #070707;
+  }
+
+  /* ── A estrutura vazia ───────────────────────────────────────────────────
+     Onde os módulos ainda não chegaram. É o quadro de montagem: mais escuro
+     do que o betão da cena e do que o próprio módulo, com a grelha dos
+     encaixes a dizer quantos faltam.
+
+     A primeira versão não tinha isto e o módulo era `#101010` sobre um betão
+     `#171717` — dezasseis níveis de preto a separar a peça do fundo. A
+     montagem acontecia toda e não se via nenhuma. */
+  .parede-encaixes {
+    background-color: #0b0b0b;
+    background-image:
+      repeating-linear-gradient(to right, #1c1c1c 0 1px, transparent 1px 12.5%),
+      repeating-linear-gradient(to bottom, #1c1c1c 0 1px, transparent 1px 25%);
+  }
+
+  /* ── As juntas da parede ─────────────────────────────────────────────────
+     Um ecrã LED montado tem as juntas dos módulos à vista, e é isso que o
+     distingue de um televisor grande. Por isso a grelha fica **por cima** do
+     vídeo, e não por baixo: apagá-la quando a parede acende tornava a cena num
+     rectângulo de vídeo qualquer.
+
+     As percentagens são a medida da célula — oito colunas dão 12.5%, quatro
+     linhas dão 25%. Num `repeating-linear-gradient` com `to right` ou
+     `to bottom` a percentagem conta sobre a dimensão da caixa, o que faz a
+     grelha acompanhar o tamanho da parede sem uma segunda medida a manter. */
+  .parede-juntas {
+    background-image:
+      repeating-linear-gradient(
+        to right,
+        rgb(0 0 0 / 0.55) 0 1px,
+        transparent 1px 12.5%
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        rgb(0 0 0 / 0.55) 0 1px,
+        transparent 1px 25%
+      );
+  }
+
   /* ── A banda de perigo ───────────────────────────────────────────────────
      O corte entre cenas. Três pixels de diagonal amarela e preta, que é o
      que separa um terreno do seguinte sem haver interpolação nenhuma. */
