@@ -250,6 +250,39 @@
       animation-range: entry 10% entry calc(50% + var(--i, 0) * 12%);
     }
 
+    /* ── A comparação que converge ───────────────────────────────────────
+       O dispositivo do `Comprar vs alugar`. Cada linha limpa-se **na direcção
+       do eixo**: a coluna da esquerda da esquerda para a direita, a da direita
+       da direita para a esquerda. As duas fecham sobre a chapa do meio.
+
+       Não é o `.revela` com outro nome. O `.revela` tem um intervalo fixo
+       porque limpa uma fotografia inteira de uma vez; aqui são treze linhas
+       curtas e o que faz o bloco ler-se como uma comparação — e não como
+       treze entradas soltas — é o escalonamento por `--i`.
+
+       Longhands em vez do atalho `animation`, e de propósito: o atalho
+       reinicia `animation-timeline` e `animation-range` para o valor inicial,
+       e escrito depois deles apaga-os em silêncio. É a armadilha que já mordeu
+       na câmara e no andaime.
+
+       Abaixo dos 640px as duas colunas empilham-se e deixa de haver eixo ao
+       centro para onde convergir — aí limpam as duas para o mesmo lado, como
+       qualquer outra lista do site. */
+    .compara,
+    .compara-espelho {
+      animation-name: revela;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 10% entry calc(48% + var(--i, 0) * 7%);
+    }
+
+    @media (min-width: 40rem) {
+      .compara-espelho {
+        animation-name: revela-espelho;
+      }
+    }
+
     /* ── Limpeza ─────────────────────────────────────────────────────────
        Uma mudança de estado, feita com `clip-path`. Nunca com `width`. */
     .revela {
@@ -551,6 +584,19 @@
 @keyframes revela {
   from {
     clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* A limpeza ao contrário, da direita para a esquerda. Existe por causa da
+   coluna direita do `Comprar vs alugar`: com o `revela` normal as duas colunas
+   limpavam para o mesmo lado e o bloco lia-se como duas listas lado a lado, em
+   vez de dois lados a fechar sobre o mesmo eixo. */
+@keyframes revela-espelho {
+  from {
+    clip-path: inset(0 0 0 100%);
   }
   to {
     clip-path: inset(0 0 0 0);
