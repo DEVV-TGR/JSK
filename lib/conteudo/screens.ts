@@ -23,9 +23,14 @@
  *
  * É texto do cliente. Fica, e a pergunta fica feita.
  *
- * Esta página **não tem** processo, testemunhos nem galeria — ao contrário da
- * `/alarmes/` e da `/obras/`. Não é esquecimento: é o que lá está, e
- * acrescentá-los seria escrever conteúdo novo sobre o negócio de outra pessoa.
+ * **O bloco `O Nosso Processo` não está aqui**, e não é omissão: é byte a byte
+ * igual ao de `/alarmes/` e de `/obras/` e vive em `lib/conteudo/comum.ts`.
+ * O site do cliente não o mostra nesta página; mostra-o esta reconstrução, por
+ * decisão do Gonçalo — a razão está no comentário de `app/screens-led/page.tsx`.
+ *
+ * O que continua de fora são os testemunhos e a galeria. Os primeiros porque
+ * são Lorem Ipsum com personas de stock; a segunda porque não há fotografias
+ * de screens para lá pôr. Ver `docs/decisoes-pendentes.md`, ponto 12.
  */
 
 export const TITULO = "JSK Screens";

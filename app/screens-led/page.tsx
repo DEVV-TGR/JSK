@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { BandaOrcamento } from "@/components/seccoes/BandaOrcamento";
+import { Processo } from "@/components/seccoes/Processo";
 import { AplicacoesScreens } from "@/components/seccoes/screens/AplicacoesScreens";
 import { ComprarOuAlugar } from "@/components/seccoes/screens/ComprarOuAlugar";
 import { HeroiScreens } from "@/components/seccoes/screens/HeroiScreens";
@@ -24,21 +25,26 @@ export const metadata: Metadata = {
 };
 
 /**
- * A `/screens-led/`, em cinco cenas mais a chapa.
+ * A `/screens-led/`, em seis cenas mais a chapa.
  *
- * A sequência de terrenos é asfalto → papel → betão → papel → asfalto →
- * amarelo. **Não leva `banda-perigo` nenhuma**, e é a única das quatro páginas
- * de sector onde isso acontece: não há dois terrenos escuros encostados, por
- * isso todos os cortes já se vêem. A banda que aparece no fim é a que a
- * `BandaOrcamento` traz consigo, e essa marca o fim — não separa dois escuros.
+ * A sequência de terrenos é asfalto → papel → betão → papel → asfalto → betão
+ * → amarelo. O único corte entre dois terrenos escuros é o quinto para o
+ * sexto, e é lá que entra a banda de perigo. A segunda que aparece é a que a
+ * `BandaOrcamento` traz consigo, e essa marca o fim, não separa dois escuros.
  *
  * O pico é a cena 3, a parede que se monta, e é a única fixa. A cena 2 é a
  * mais calma de propósito: é o silêncio que a antecede, como nas irmãs.
  *
- * Esta página **não tem** processo, testemunhos nem galeria. Não é omissão
- * nossa — é o que o site do cliente tem, e acrescentá-los seria escrever
- * conteúdo novo sobre o negócio dele. Fica mais curta do que a `/alarmes/` e a
- * `/obras/`, e isso é honesto.
+ * **O `Processo` está aqui e o site do cliente não o tem nesta página.** Foi
+ * decisão do Gonçalo, a 6 de Setembro de 2026, e a razão é de funil e não de
+ * simetria: quem chega da `/alarmes/` ou da `/obras/` já viu como se compra à
+ * JSK, e sem este bloco a página de screens acabava a meio dessa explicação.
+ * Não é conteúdo novo — os quatro passos são os mesmos, byte a byte, e vivem
+ * em `lib/conteudo/comum.ts` porque nunca foram de sector nenhum.
+ *
+ * O que continua de fora são os testemunhos e a galeria. Os primeiros porque
+ * são Lorem Ipsum com personas de stock em todo o site; a segunda porque não
+ * há fotografias de screens para lá pôr — `docs/decisoes-pendentes.md`, 12.
  */
 export default function Screens() {
   return (
@@ -48,6 +54,8 @@ export default function Screens() {
       <ParedeQueMonta />
       <ComprarOuAlugar />
       <AplicacoesScreens />
+      <div className="banda-perigo" aria-hidden="true" />
+      <Processo />
       <BandaOrcamento />
     </>
   );
