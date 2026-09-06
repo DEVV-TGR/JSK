@@ -11,6 +11,11 @@ import type { NomeIcone } from "@/components/ui/Icone";
  * A numeração não vive aqui: sai do `index` onde a lista é percorrida. É o que
  * torna impossível o defeito #7, em que os serviços de `/obras/` estão
  * numerados `01., 01., 02.`.
+ *
+ * A fotografia de cada sector foi escolhida pelo Gonçalo a 6 de Setembro de
+ * 2026. O `alt` não é copy do site — é marcação de acessibilidade, e obedece à
+ * mesma regra das legendas de `/obras/`: **só o que se vê na fotografia**, sem
+ * uma afirmação sobre o negócio que a imagem não sustente.
  */
 export const SECTORES_DETALHE = [
   {
@@ -20,6 +25,8 @@ export const SECTORES_DETALHE = [
     /* Verbatim do cartão da homepage. */
     texto:
       "Garantimos a sua segurança e tranquilidade com tecnologia de ponta e soluções personalizadas para proteger o que mais importa",
+    imagem: "/projectos/JSK-ImageCamaras.jpg",
+    alt: "Quatro câmaras de vigilância brancas, de corpo alongado, alinhadas em cima das respectivas caixas sobre um murete, com a foz de um rio ao fundo.",
     /* Verbatim dos títulos de serviço de /alarmes/. */
     servicos: [
       "Instalação de Sistemas de Alarme",
@@ -34,6 +41,8 @@ export const SECTORES_DETALHE = [
     icone: "obra",
     texto:
       "Damos uma nova vida aos espaços através de remodelações de alta qualidade, com inovação, bom gosto e atenção a cada detalhe",
+    imagem: "/obras/cozinha-acabada.jpg",
+    alt: "Cozinha acabada, com armários brancos sem puxadores, bancada clara, pavimento de madeira e focos embutidos no teto.",
     servicos: [
       "Transformações de Espaços",
       "Acabamentos e Revestimentos",
@@ -46,6 +55,10 @@ export const SECTORES_DETALHE = [
     icone: "ecra",
     texto:
       "Garantimos que a sua mensagem chegue mais longe com screens LED modernos, para um impacto e visibilidade únicos",
+    /* É o poster do vídeo da `/screens-led/`. Tem 848×478, que é pouco para
+       meia largura da `Medida` — dito ao Gonçalo, e escolhido por ele. */
+    imagem: "/screens/parede-poster.webp",
+    alt: "Ecrã LED da JSK montado ao comprimento de uma mesa, aceso num salão às escuras, com letras escuras sobre fundo amarelo.",
     servicos: [
       "Aluguer e Venda de Screens LED",
       "Ecrãs para Interior",
@@ -63,6 +76,8 @@ export const SECTORES_DETALHE = [
     icone: "web",
     texto:
       "Websites modernos e funcionais, desenvolvidos pela DevPlus e promovidos pela JSK, para garantir a sua marca com impacto online.",
+    imagem: "/web/taskuinha-do-pirata.webp",
+    alt: "Página de entrada do site da Taskuinha do Pirata.",
     servicos: ["Web Design", "Foco em Resultados", "Identidade Visual"],
   },
 ] as const satisfies readonly {
@@ -70,6 +85,8 @@ export const SECTORES_DETALHE = [
   href: string;
   icone: NomeIcone;
   texto: string;
+  imagem: string;
+  alt: string;
   servicos: readonly string[];
 }[];
 

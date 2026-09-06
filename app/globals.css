@@ -180,18 +180,38 @@ p {
   }
 
   /* ── A pilha fixa ────────────────────────────────────────────────────────
-     Os quatro sectores ocupam o mesmo sítio no ecrã e substituem-se à medida
-     que se desce. Cada um encosta um pouco mais abaixo do que o anterior, o
-     que deixa a aresta dos que já passaram à vista — dá a ler a pilha como
-     uma pilha, e não como um cartão a piscar.
+     Os quatro sectores encostam ao topo e cada um é **tapado por inteiro**
+     pelo seguinte. `position: sticky` puro: sem linha temporal, sem
+     JavaScript, sem nada que possa não estar suportado.
 
-     `position: sticky` puro. Não depende de `animation-timeline`, não depende
-     de JavaScript, e funciona em tudo o que suporta `sticky` — que é tudo.
-     A altura do cabeçalho está no cálculo porque o cabeçalho é ele próprio
-     `sticky` e taparia o topo de cada cartão. */
+     Duas coisas que a primeira versão desta pilha fazia ao contrário, e eram
+     elas que a faziam ler como três faixas cinzentas em vez de uma pilha:
+
+     1. O `top` era `calc(4.5rem + var(--i) * 3.25rem)` — cada cartão parava um
+        degrau mais abaixo e deixava a aresta do anterior de fora. Aqui é um
+        `top` só, igual em todos, como no `fora.so`.
+     2. Os cartões tinham `min-height` e acabavam com alturas diferentes, o que
+        deixa o mais baixo incapaz de tapar o mais alto. A altura fixa está no
+        componente.
+
+     O `top` é 4.5rem do cabeçalho — que é ele próprio `sticky` e taparia o
+     cartão — mais 1rem de ar.
+
+     As duas condições da media query são a mesma condição: **o cartão tem de
+     caber no ecrã.** Abaixo dos 64rem de largura ele passa a uma coluna só,
+     com fotografia em cima, e mede uns 900px; num ecrã com menos de 40rem de
+     altura nem o cartão de 33rem cabe. Encostar ao topo um cartão mais alto do
+     que o ecrã deixa o fundo dele inalcançável — em qualquer dos casos vale
+     mais a sequência. É também o que o `fora.so` faz abaixo dos 810px. */
   .pilha-item {
-    position: sticky;
-    top: calc(4.5rem + var(--i, 0) * 3.25rem);
+    position: static;
+  }
+
+  @media (min-width: 64rem) and (min-height: 40rem) {
+    .pilha-item {
+      position: sticky;
+      top: 5.5rem;
+    }
   }
 
   /* ── O módulo de LED ─────────────────────────────────────────────────────
