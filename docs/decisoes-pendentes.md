@@ -153,6 +153,22 @@ tem Google Analytics, GTM, Meta Pixel nem nada parecido.
 Seja qual for, a política é reescrita para bater certo com o que ficar
 instalado.
 
+**Decidido a 6 de Setembro de 2026, para a `/contactos/`: sem mapa embebido.**
+
+A morada abre o Google Maps num separador, com o `urlMapa` de `lib/site.ts`.
+Um `iframe` do Google punha cookies de terceiros e obrigava o site inteiro a
+ter banner de consentimento — o que fecharia a saída 1 desta decisão sem
+ninguém a ter escolhido.
+
+Com isto, o site continua **sem um único cookie**. A escolha entre as três
+saídas acima continua por fazer, mas nenhuma delas foi fechada por acidente.
+
+**Também a 6 de Setembro:** o formulário de orçamento passou a existir, com
+consentimento explícito (defeito #23), rótulos a sério (#31) e engodo
+anti-spam (#37). Enquanto `CONTACTO_PROVEDOR` estiver vazio a rota responde
+503 e o formulário diz que não enviou — nunca finge. Falta uma chave da
+Resend, ou um ID da Formspree, e o `.env.example` explica os dois.
+
 ---
 
 ## 8. Os números dos contadores
