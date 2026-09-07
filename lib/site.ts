@@ -102,6 +102,35 @@ export const telefoneHref = `tel:${site.telefone.replace(/[^\d+]/g, "")}`;
 export const emailHref = `mailto:${site.email}`;
 
 /**
+ * O WhatsApp, derivado do mesmo número.
+ *
+ * ⚠️ **Por confirmar que a conta existe.** O `wa.me` não valida nada: um número
+ * sem WhatsApp activo abre uma página da Meta a dizer que o número é inválido,
+ * e quem clicou fica a olhar para um erro em vez de falar com a empresa.
+ *
+ * O formato do `wa.me` é o internacional **sem** `+` e sem espaços — daí o
+ * `\D` e não o `[^\d+]` do `telefoneHref`, que quer o `+`.
+ *
+ * Sai de `site.telefone` e não de uma constante ao lado, pela mesma razão que
+ * o resto deste ficheiro existe: dois números escritos à mão divergem, e foi
+ * exactamente isso que aconteceu no site em WordPress.
+ */
+export const whatsappHref = `https://wa.me/${site.telefone.replace(/\D/g, "")}`;
+
+/**
+ * O mesmo endereço, com a conversa já começada.
+ *
+ * Quem chega ao WhatsApp vindo de uma pergunta do painel de ajuda leva essa
+ * pergunta escrita na caixa de texto. Sem isto, a conversa abre em branco e a
+ * pessoa tem de repetir o que já tinha carregado — e quem recebe não sabe de
+ * onde veio o contacto.
+ */
+export function whatsappCom(pergunta: string): string {
+  const texto = `Olá! Vim do site ${site.dominio} e queria saber: ${pergunta}`;
+  return `${whatsappHref}?text=${encodeURIComponent(texto)}`;
+}
+
+/**
  * Ligação para o mapa.
  *
  * O site actual usa um URL de sessão do Safari copiado da barra de endereço,

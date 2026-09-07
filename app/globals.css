@@ -310,3 +310,31 @@ p {
     );
   }
 }
+
+/* ═════════════════════════════════════════════════════════════════════════
+   A entrada do painel de ajuda
+
+   Fica **fora** de `@layer components` de propósito. Uma regra fora da camada
+   ganha sempre às de dentro, e é isso que se quer aqui: nada mais no projecto
+   escreve `animation` neste elemento, e assim não há ordem de camadas para
+   manter em cabeça.
+
+   É `animation` e não `transition`, o que a poupa à armadilha do
+   `transition: all` — não há lista de propriedades para esquecer.
+
+   Quem pediu menos movimento não leva nenhum: sem a media query o painel
+   aparece feito, que é o estado final da animação de qualquer maneira.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .ajuda-entra {
+    animation: ajuda-entra 160ms ease-out both;
+  }
+}
+
+@keyframes ajuda-entra {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}

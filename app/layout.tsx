@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Roboto } from "next/font/google";
 
+import { Ajuda } from "@/components/ui/Ajuda";
 import { Cabecalho } from "@/components/ui/Cabecalho";
 import { Rodape } from "@/components/ui/Rodape";
 import { site } from "@/lib/site";
@@ -95,6 +96,15 @@ export default function RaizLayout({
         <Cabecalho />
         <main id="conteudo">{children}</main>
         <Rodape />
+
+        {/* O painel de perguntas frequentes, nas nove páginas.
+
+            Fica depois do rodapé na ordem do documento, e não antes, por causa
+            do teclado: um botão fixo declarado no topo apanhava o foco logo a
+            seguir ao «Saltar para o conteúdo», antes da navegação e do texto
+            da página. Visualmente está no canto de qualquer maneira — é
+            `position: fixed`. */}
+        <Ajuda />
       </body>
     </html>
   );
